@@ -10,8 +10,13 @@ const AppState = {
     cart: [],
     selectedCategory: 'todos',
     searchQuery: '',
-    deliveryZone: 'bogota-norte',
+    deliveryZone: 'personalizado-domicilio',
+    isExpressDelivery: false,
+    expressSurcharge: 15000,
+    customDeliveryDate: '',
+    customDeliverySlot: 'Mañana (8:00 AM - 12:00 PM)',
     deliveryCosts: {
+        'personalizado-domicilio': 12000,
         'bogota-norte': 8000,
         'bogota-centro': 9000,
         'sabana-centro': 6000,
@@ -35,6 +40,75 @@ function loadCart() {
 function saveCart() {
     localStorage.setItem('agroguasca_cart', JSON.stringify(AppState.cart));
     updateCartUI();
+}
+
+// Cálculo inteligente de fecha de entrega estándar según día y hora del pedido
+function getCalculatedDeliveryInfo() {
+    const now = new Date();
+    const day = now.getDay(); // 0: Dom, 1: Lun, 2: Mar, 3: Mie, 4: Jue, 5: Vie, 6: Sab
+    const hours = now.getHours();
+
+    let targetDate = new Date(now);
+    let routeName = "";
+    let reason = "";
+
+    // Ciclo de Cosechas comunitarias en Guasca:
+    // Corte para Miércoles: Martes 5:00 PM (17:00).
+    // Corte para Sábado: Viernes 5:00 PM (17:00).
+    if (day === 0) { // Domingo -> Miércoles
+        targetDate.setDate(now.getDate() + 3);
+        routeName = "Miércoles Próximo";
+        reason = "Pedido recibido en fin de semana. Cosecha fresca el martes temprano y despacho el miércoles.";
+    } else if (day === 1) { // Lunes -> Miércoles
+        targetDate.setDate(now.getDate() + 2);
+        routeName = "Miércoles Próximo";
+        reason = "A tiempo para la ruta comunitaria del miércoles. Corte de pedidos el martes a las 5:00 PM.";
+    } else if (day === 2) { // Martes
+        if (hours < 17) {
+            targetDate.setDate(now.getDate() + 1);
+            routeName = "Mañana Miércoles (¡Corte Activo!)";
+            reason = "¡A tiempo! Tu pedido entró antes de las 5:00 PM. Se cosecha de inmediato para entrega mañana.";
+        } else {
+            targetDate.setDate(now.getDate() + 4);
+            routeName = "Próximo Sábado";
+            reason = "Tu pedido ingresó después de las 5:00 PM. Entra en el ciclo de cosecha para el sábado.";
+        }
+    } else if (day === 3) { // Miércoles -> Sábado
+        targetDate.setDate(now.getDate() + 3);
+        routeName = "Próximo Sábado";
+        reason = "A tiempo para la ruta comunitaria del sábado. Corte de pedidos el viernes a las 5:00 PM.";
+    } else if (day === 4) { // Jueves -> Sábado
+        targetDate.setDate(now.getDate() + 2);
+        routeName = "Próximo Sábado";
+        reason = "A tiempo para la ruta comunitaria del sábado. Corte de pedidos el viernes a las 5:00 PM.";
+    } else if (day === 5) { // Viernes
+        if (hours < 17) {
+            targetDate.setDate(now.getDate() + 1);
+            routeName = "Mañana Sábado (¡Corte Activo!)";
+            reason = "¡A tiempo! Tu pedido entró antes de las 5:00 PM. Se incluye en el despacho de mañana sábado.";
+        } else {
+            targetDate.setDate(now.getDate() + 5);
+            routeName = "Próximo Miércoles";
+            reason = "Ingresó después de las 5:00 PM. Se programa para la cosecha y despacho del próximo miércoles.";
+        }
+    } else if (day === 6) { // Sábado -> Miércoles
+        targetDate.setDate(now.getDate() + 4);
+        routeName = "Próximo Miércoles";
+        reason = "Pedido ingresado en fin de semana. Cosecha y despacho para el próximo miércoles.";
+    }
+
+    const options = { weekday: 'long', day: 'numeric', month: 'long' };
+    const formattedDate = targetDate.toLocaleDateString('es-CO', options);
+    const capitalizedDate = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+    const currentTimeFormatted = now.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+
+    return {
+        targetDate,
+        formattedDate: capitalizedDate,
+        routeName,
+        reason,
+        currentTimeFormatted
+    };
 }
 
 // Inicialización
@@ -75,8 +149,49 @@ function setupEventListeners() {
     // Selector de zona de entrega en carrito
     const zoneSelect = document.getElementById('cart-delivery-zone');
     if (zoneSelect) {
+        zoneSelect.value = AppState.deliveryZone;
         zoneSelect.addEventListener('change', (e) => {
             AppState.deliveryZone = e.target.value;
+            updateZoneDescriptionNote(e.target.value);
+            updateCartSummary();
+        });
+    }
+
+    // Checkbox de Despacho Express / Fecha Personalizada
+    const expressCheck = document.getElementById('express-delivery-check');
+    const expressBox = document.getElementById('express-date-picker-box');
+    const expressDateInput = document.getElementById('express-date-input');
+    const expressSlotSelect = document.getElementById('express-time-slot');
+
+    if (expressDateInput) {
+        // Establecer fecha mínima para mañana
+        const tomorrow = new Date(Date.now() + 86400000);
+        expressDateInput.min = tomorrow.toISOString().split('T')[0];
+        expressDateInput.value = tomorrow.toISOString().split('T')[0];
+        AppState.customDeliveryDate = expressDateInput.value;
+
+        expressDateInput.addEventListener('change', (e) => {
+            AppState.customDeliveryDate = e.target.value;
+        });
+    }
+
+    if (expressSlotSelect) {
+        expressSlotSelect.addEventListener('change', (e) => {
+            AppState.customDeliverySlot = e.target.value;
+        });
+    }
+
+    if (expressCheck) {
+        expressCheck.addEventListener('change', (e) => {
+            AppState.isExpressDelivery = e.target.checked;
+            if (expressBox) {
+                expressBox.classList.toggle('hidden', !e.target.checked);
+            }
+            const surchargeRow = document.getElementById('row-express-surcharge');
+            if (surchargeRow) {
+                surchargeRow.classList.toggle('hidden', !e.target.checked);
+                surchargeRow.classList.toggle('flex', e.target.checked);
+            }
             updateCartSummary();
         });
     }
@@ -85,6 +200,22 @@ function setupEventListeners() {
     const checkoutForm = document.getElementById('checkout-form');
     if (checkoutForm) {
         checkoutForm.addEventListener('submit', handleCheckoutSubmit);
+    }
+}
+
+function updateZoneDescriptionNote(zone) {
+    const note = document.getElementById('zone-description-note');
+    if (!note) return;
+    if (zone === 'personalizado-domicilio') {
+        note.textContent = '📍 Despacho personalizado directo a la puerta de tu casa en Bogotá o municipios aledaños.';
+    } else if (zone === 'bogota-norte') {
+        note.textContent = '🚛 Ruta Norte: Usaquén, Suba, Rosales, Santa Bárbara, Cedritos.';
+    } else if (zone === 'bogota-centro') {
+        note.textContent = '🚛 Ruta Centro: Chapinero, Teusaquillo, Parkway, Galerías.';
+    } else if (zone === 'sabana-centro') {
+        note.textContent = '🚛 Ruta Sabana: Sopó, Chía, Cajicá, Zipaquirá.';
+    } else {
+        note.textContent = '🏡 Punto comunitario: Recogida en el centro de acopio de San Francisco (Guasca).';
     }
 }
 
@@ -283,16 +414,39 @@ function renderCartItems() {
 // Actualizar resumen numérico del carrito
 function updateCartSummary() {
     const subtotal = AppState.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const shipping = AppState.cart.length > 0 ? (AppState.deliveryCosts[AppState.deliveryZone] || 0) : 0;
-    const total = subtotal + shipping;
+    const baseShipping = AppState.cart.length > 0 ? (AppState.deliveryCosts[AppState.deliveryZone] || 0) : 0;
+    const expressFee = (AppState.isExpressDelivery && AppState.cart.length > 0) ? AppState.expressSurcharge : 0;
+    const total = subtotal + baseShipping + expressFee;
 
     const elSubtotal = document.getElementById('cart-subtotal');
     const elShipping = document.getElementById('cart-shipping');
+    const elExpressFee = document.getElementById('cart-express-fee');
     const elTotal = document.getElementById('cart-total');
 
     if (elSubtotal) elSubtotal.textContent = `$${subtotal.toLocaleString('es-CO')}`;
-    if (elShipping) elShipping.textContent = shipping === 0 ? 'Gratis (Guasca)' : `$${shipping.toLocaleString('es-CO')}`;
+    if (elShipping) elShipping.textContent = baseShipping === 0 ? 'Gratis (Guasca)' : `$${baseShipping.toLocaleString('es-CO')}`;
+    if (elExpressFee) elExpressFee.textContent = `+$${expressFee.toLocaleString('es-CO')}`;
     if (elTotal) elTotal.textContent = `$${total.toLocaleString('es-CO')}`;
+
+    // Actualizar banner inteligente de fecha según día y hora del pedido
+    const schedBanner = document.getElementById('dynamic-schedule-banner');
+    if (schedBanner) {
+        const info = getCalculatedDeliveryInfo();
+        schedBanner.innerHTML = `
+            <div class="flex items-center justify-between mb-1">
+                <span class="font-bold text-emerald-900 flex items-center gap-1">
+                    📅 Ruta Comunitaria: <strong>${info.routeName}</strong>
+                </span>
+                <span class="text-[10px] bg-emerald-200/60 text-emerald-900 font-bold px-1.5 py-0.5 rounded">
+                    🕒 ${info.currentTimeFormatted}
+                </span>
+            </div>
+            <p class="text-emerald-950 font-extrabold text-sm mb-1">${info.formattedDate}</p>
+            <p class="text-[11px] text-emerald-800 leading-snug">
+                ${info.reason}
+            </p>
+        `;
+    }
 
     // Deshabilitar checkout si carrito está vacío
     const checkoutBtn = document.getElementById('btn-open-checkout');
@@ -410,10 +564,33 @@ function closeProductModal() {
 function openCheckoutModal() {
     toggleCartDrawer(false);
     const modal = document.getElementById('checkout-modal');
-    if (modal) {
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
+    if (!modal) return;
+
+    // Sincronizar zona elegida en carrito
+    const clientZone = document.getElementById('client-zone');
+    if (clientZone) {
+        clientZone.value = AppState.deliveryZone;
     }
+
+    const dayInput = document.getElementById('client-day');
+    const expressBox = document.getElementById('checkout-express-details');
+    const expressText = document.getElementById('checkout-express-text');
+
+    if (AppState.isExpressDelivery) {
+        const chosenDate = AppState.customDeliveryDate || 'Mañana';
+        if (dayInput) dayInput.value = `Express: ${chosenDate} (${AppState.customDeliverySlot})`;
+        if (expressBox && expressText) {
+            expressBox.classList.remove('hidden');
+            expressText.textContent = `Despacho prioritario directo a domicilio en fecha seleccionada: ${chosenDate} en la franja ${AppState.customDeliverySlot}. Recargo de transporte express incluido (+ $15.000).`;
+        }
+    } else {
+        const info = getCalculatedDeliveryInfo();
+        if (dayInput) dayInput.value = `${info.routeName} (${info.formattedDate})`;
+        if (expressBox) expressBox.classList.add('hidden');
+    }
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
 }
 
 function closeCheckoutModal() {
@@ -441,8 +618,10 @@ function handleCheckoutSubmit(e) {
     const notes = document.getElementById('client-notes').value.trim();
 
     const subtotal = AppState.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const shipping = AppState.deliveryCosts[zone] || 0;
-    const total = subtotal + shipping;
+    const baseShipping = AppState.deliveryCosts[zone] || 0;
+    const expressFee = AppState.isExpressDelivery ? AppState.expressSurcharge : 0;
+    const totalShipping = baseShipping + expressFee;
+    const total = subtotal + totalShipping;
 
     const orderId = 'AG-' + Math.floor(1000 + Math.random() * 9000);
 
@@ -450,10 +629,19 @@ function handleCheckoutSubmit(e) {
     const newOrder = {
         id: orderId,
         date: new Date().toISOString(),
-        client: { name, phone, address, zone, deliveryDay, notes },
+        client: { 
+            name, 
+            phone, 
+            address, 
+            zone, 
+            deliveryDay, 
+            isExpress: AppState.isExpressDelivery,
+            customSlot: AppState.isExpressDelivery ? AppState.customDeliverySlot : null,
+            notes 
+        },
         items: [...AppState.cart],
         subtotal,
-        shipping,
+        shipping: totalShipping,
         total,
         status: 'Pendiente de Confirmación'
     };
@@ -467,10 +655,14 @@ function handleCheckoutSubmit(e) {
     waMessage += `👤 *DATOS DEL COMPRADOR:*\n`;
     waMessage += `• Nombre: ${name}\n`;
     waMessage += `• Teléfono: ${phone}\n`;
-    waMessage += `• Dirección: ${address}\n`;
-    waMessage += `• Zona de Entrega: ${zone.toUpperCase()}\n`;
-    waMessage += `• Día programado: ${deliveryDay}\n`;
-    if (notes) waMessage += `• Observaciones: ${notes}\n`;
+    waMessage += `• Dirección de Domicilio: ${address}\n`;
+    waMessage += `• Destino/Zona: ${zone === 'personalizado-domicilio' ? 'DIRECTO A TU CASA (PERSONALIZADO)' : zone.toUpperCase()}\n`;
+    waMessage += `• Modalidad: ${AppState.isExpressDelivery ? '🚀 DESPACHO EXPRESS / FECHA PERSONALIZADA' : '🌿 RUTA COMUNITARIA ESTÁNDAR'}\n`;
+    waMessage += `• Fecha de Entrega: ${deliveryDay}\n`;
+    if (AppState.isExpressDelivery) {
+        waMessage += `• Franja Horaria Solicitada: ${AppState.customDeliverySlot}\n`;
+    }
+    if (notes) waMessage += `• Observaciones/Timbre: ${notes}\n`;
     waMessage += `\n🧺 *CANASTA DE PRODUCTOS CONSOLIDADOS:*\n`;
 
     AppState.cart.forEach((item, index) => {
@@ -480,7 +672,10 @@ function handleCheckoutSubmit(e) {
 
     waMessage += `\n💰 *RESUMEN ECONÓMICO:*\n`;
     waMessage += `• Subtotal Cosecha: $${subtotal.toLocaleString('es-CO')}\n`;
-    waMessage += `• Logística Circuito Corto: $${shipping.toLocaleString('es-CO')}\n`;
+    waMessage += `• Transporte Base: $${baseShipping.toLocaleString('es-CO')}\n`;
+    if (AppState.isExpressDelivery) {
+        waMessage += `• Recargo Despacho Express: $${expressFee.toLocaleString('es-CO')}\n`;
+    }
     waMessage += `• *TOTAL A PAGAR:* $${total.toLocaleString('es-CO')}\n\n`;
     waMessage += `🤝 *IMPACTO:* Este pedido evita intermediarios y apoya directamente a las familias campesinas de Guasca.\n`;
     waMessage += `_Generado a través de la plataforma comunitaria AgroGuasca (Proyecto Integrador I - Universidad de La Salle)_`;
@@ -491,6 +686,7 @@ function handleCheckoutSubmit(e) {
 
     // Limpiar carrito tras orden exitosa
     AppState.cart = [];
+    AppState.isExpressDelivery = false;
     saveCart();
     closeCheckoutModal();
 

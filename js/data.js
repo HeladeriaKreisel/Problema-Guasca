@@ -230,6 +230,132 @@ const SEED_PRODUCTS = [
         demandAnticipation: true,
         fairTradeMargin: "90% directo a las 5 familias",
         wasteSavedKg: 310
+    },
+    {
+        id: "prod-item-10",
+        name: "Papa Criolla Chaucha Dorada",
+        category: "tuberculos",
+        producerId: "prod-2",
+        producerName: "Doña Rosalba Cuervo",
+        finca: "Finca El Mirador",
+        price: 4200,
+        unit: "Kilo",
+        stockKg: 150,
+        harvestDate: "Cosecha fresca semanal",
+        image: "https://images.unsplash.com/photo-1508747703725-719777637510?w=600&auto=format&fit=crop&q=80",
+        description: "Papa criolla de páramo con textura suave y cremosa. Cultivada en laderas altas sin agroquímicos agresivos. Perfecta para sopas, frituras y ajiacos.",
+        badge: "100% Nativa",
+        demandAnticipation: true,
+        fairTradeMargin: "82% directo a la productora",
+        wasteSavedKg: 110
+    },
+    {
+        id: "prod-item-11",
+        name: "Mora Silvestre de Castilla de Altura",
+        category: "frutas",
+        producerId: "prod-1",
+        producerName: "Don Hernando Gómez",
+        finca: "Finca La Floresta",
+        price: 6500,
+        unit: "Libra (500g)",
+        stockKg: 75,
+        harvestDate: "Cosecha de 48 horas",
+        image: "https://images.unsplash.com/photo-1577069808021-5079a40590a9?w=600&auto=format&fit=crop&q=80",
+        description: "Mora recolectada a mano a 2.700 msnm. Sabor intenso, rica en antioxidantes y con maduración natural en planta.",
+        badge: "Cosecha del Día",
+        demandAnticipation: true,
+        fairTradeMargin: "85% directo al campesino",
+        wasteSavedKg: 90
+    },
+    {
+        id: "prod-item-12",
+        name: "Miel Pura de Abejas de Bosque Altoandino",
+        category: "canastas",
+        producerId: "prod-4",
+        producerName: "Mateo Espitia",
+        finca: "Parcela El Renacer",
+        price: 19000,
+        unit: "Frasco de vidrio 500g",
+        stockKg: 30,
+        harvestDate: "Extracción artesanal en frío",
+        image: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=600&auto=format&fit=crop&q=80",
+        description: "Miel cruda sin pasteurizar con floración de frailejón, eucalipto y mora silvestre. Apicultura sostenible para la polinización de los cultivos de San Francisco.",
+        badge: "Pura y Cruda",
+        demandAnticipation: false,
+        fairTradeMargin: "90% directo al apicultor joven",
+        wasteSavedKg: 45
+    },
+    {
+        id: "prod-item-13",
+        name: "Queso Doble Crema Campesino Tajado",
+        category: "lacteos",
+        producerId: "prod-3",
+        producerName: "Cooperativa CooTrinidad",
+        finca: "Centro de Acopio La Trinidad",
+        price: 14500,
+        unit: "Bloque 500g",
+        stockKg: 50,
+        harvestDate: "Elaboración diaria",
+        image: "https://images.unsplash.com/photo-1628088062854-d1870b4553da?w=600&auto=format&fit=crop&q=80",
+        description: "Elaborado con 100% leche entera de vacas de pastoreo. Hilado artesanal, bajo en sodio y con fundido perfecto.",
+        badge: "Pura Leche de Pastoreo",
+        demandAnticipation: false,
+        fairTradeMargin: "78% distribuido en cooperativa",
+        wasteSavedKg: 130
+    },
+    {
+        id: "prod-item-14",
+        name: "Trucha Arcoíris Fresca de Páramo (Eviscerada)",
+        category: "canastas",
+        producerId: "prod-4",
+        producerName: "Asoc. Acuícola San Francisco",
+        finca: "Reserva Hídrica Guasca",
+        price: 16000,
+        unit: "Paquete x 2 unidades (550g)",
+        stockKg: 40,
+        harvestDate: "Pesca bajo pedido",
+        image: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=600&auto=format&fit=crop&q=80",
+        description: "Criada en corrientes de agua fría y pura de páramo. Carne firme, rosada y rica en Omega 3. Despachada en cadena de frío directa.",
+        badge: "Pesca Bajo Pedido",
+        demandAnticipation: true,
+        fairTradeMargin: "84% directo a los acuicultores",
+        wasteSavedKg: 70
+    },
+    {
+        id: "prod-item-15",
+        name: "Ramo Fresco de Hierbas y Aromáticas de Huerta",
+        category: "tuberculos",
+        producerId: "prod-2",
+        producerName: "Doña Rosalba Cuervo",
+        finca: "Finca El Mirador",
+        price: 7500,
+        unit: "Ramillete variado fresco",
+        stockKg: 60,
+        harvestDate: "Corte matutino",
+        image: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=600&auto=format&fit=crop&q=80",
+        description: "Variedad de menta, hierbabuena, tomillo, romero, caléndula y cidrón cultivadas en huerta orgánica campesina.",
+        badge: "Huerta Limpia",
+        demandAnticipation: true,
+        fairTradeMargin: "88% directo a la productora",
+        wasteSavedKg: 50
+    },
+    {
+        id: "prod-item-16",
+        name: "Mermelada Artesanal de Uchuva y Jengibre",
+        category: "lacteos",
+        producerId: "prod-5",
+        producerName: "Asoc. Mujeres Emprendedoras",
+        finca: "Taller Gastronómico Comunitario",
+        price: 8500,
+        unit: "Frasco de vidrio 250g",
+        stockKg: 35,
+        harvestDate: "Lote artesanal",
+        image: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=600&auto=format&fit=crop&q=80",
+        description: "Elaborada por madres campesinas con uchuva seleccionada de Guasca y panela ecológica. Sin colorantes ni pectinas artificiales.",
+        badge: "Mujeres Rurales",
+        demandAnticipation: false,
+        fairTradeMargin: "90% a mujeres cabeza de familia",
+        wasteSavedKg: 85
     }
 ];
 
@@ -302,7 +428,23 @@ function getStoredProducts() {
         localStorage.setItem("agroguasca_products", JSON.stringify(SEED_PRODUCTS));
         return SEED_PRODUCTS;
     }
-    return JSON.parse(stored);
+    try {
+        let products = JSON.parse(stored);
+        let updated = false;
+        SEED_PRODUCTS.forEach(seed => {
+            if (!products.some(p => p.id === seed.id)) {
+                products.push(seed);
+                updated = true;
+            }
+        });
+        if (updated) {
+            localStorage.setItem("agroguasca_products", JSON.stringify(products));
+        }
+        return products;
+    } catch (e) {
+        localStorage.setItem("agroguasca_products", JSON.stringify(SEED_PRODUCTS));
+        return SEED_PRODUCTS;
+    }
 }
 
 function saveProducts(products) {

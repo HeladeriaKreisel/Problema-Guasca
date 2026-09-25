@@ -401,15 +401,55 @@
         </div>
 
         <!-- Opciones de Logística de Entrega -->
-        <div class="p-4 bg-gray-50 border-t border-gray-100 text-xs">
-            <label class="block font-semibold text-gray-700 mb-1">Destino de Entrega (Circuito Corto):</label>
-            <select id="cart-delivery-zone" class="w-full bg-white border border-gray-200 rounded-lg p-2 text-xs focus:ring-1 focus:ring-emerald-700">
-                <option value="bogota-norte">Bogotá Norte (Usaquén, Suba, Rosales) - $8.000</option>
-                <option value="bogota-centro">Bogotá Centro / Chapinero / Teusaquillo - $9.000</option>
-                <option value="sabana-centro">Sabana Centro (Sopó, Chía, Cajicá) - $6.000</option>
-                <option value="guasca-recogida">Punto Comunitario San Francisco (Guasca) - Gratis</option>
-            </select>
-            <p class="text-gray-400 mt-1 italic">Entregas programadas: Miércoles y Sábados directas desde Guasca.</p>
+        <div class="p-4 bg-gray-50 border-t border-gray-100 text-xs space-y-3">
+            <div>
+                <label class="block font-semibold text-gray-700 mb-1">Destino de Entrega:</label>
+                <select id="cart-delivery-zone" class="w-full bg-white border border-gray-200 rounded-lg p-2 text-xs focus:ring-1 focus:ring-emerald-700">
+                    <option value="personalizado-domicilio">📍 Envío Personalizado Puerta a Puerta (A tu Casa) - $12.000</option>
+                    <option value="bogota-norte">Bogotá Norte (Usaquén, Suba, Rosales) - $8.000</option>
+                    <option value="bogota-centro">Bogotá Centro / Chapinero / Teusaquillo - $9.000</option>
+                    <option value="sabana-centro">Sabana Centro (Sopó, Chía, Cajicá) - $6.000</option>
+                    <option value="guasca-recogida">Punto Comunitario San Francisco (Guasca) - Gratis</option>
+                </select>
+                <p id="zone-description-note" class="text-gray-500 mt-1 italic text-[11px]">
+                    📦 Despacho directo a tu puerta en cualquier dirección de Bogotá o Sabana Centro.
+                </p>
+            </div>
+
+            <!-- Banner Inteligente de Fecha según Día y Hora de corte -->
+            <div id="dynamic-schedule-banner" class="p-3 bg-emerald-50/90 rounded-xl border border-emerald-200 text-xs">
+                <!-- Se actualiza dinámicamente según día y hora en app.js -->
+            </div>
+
+            <!-- Opción Express / Fecha personalizada elegida por el cliente -->
+            <div class="p-3 bg-amber-50 rounded-xl border border-amber-200">
+                <div class="flex items-start gap-2">
+                    <input type="checkbox" id="express-delivery-check" class="mt-0.5 w-4 h-4 text-amber-600 rounded cursor-pointer">
+                    <div class="flex-1">
+                        <label for="express-delivery-check" class="font-bold text-amber-950 block cursor-pointer">
+                            ⚡ ¿Lo quieres antes? Despacho Express / Fecha Personalizada (+ $15.000)
+                        </label>
+                        <p class="text-[11px] text-amber-800 mt-0.5">
+                            Cosecha y despacho individual exclusivo directo desde Guasca el día y hora que elijas.
+                        </p>
+                    </div>
+                </div>
+
+                <div id="express-date-picker-box" class="hidden mt-2.5 pt-2 border-t border-amber-200 space-y-2">
+                    <div>
+                        <label class="block text-[11px] font-bold text-amber-950 mb-1">Elige la fecha que te gustaría recibirlo:</label>
+                        <input type="date" id="express-date-input" class="w-full bg-white border border-amber-300 rounded-lg p-2 text-xs text-gray-800">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-amber-950 mb-1">Franja horaria preferida:</label>
+                        <select id="express-time-slot" class="w-full bg-white border border-amber-300 rounded-lg p-2 text-xs text-gray-800">
+                            <option value="Mañana (8:00 AM - 12:00 PM)">Mañana (8:00 AM - 12:00 PM)</option>
+                            <option value="Tarde (1:00 PM - 5:00 PM)">Tarde (1:00 PM - 5:00 PM)</option>
+                            <option value="Urgente / Primera hora (7:00 AM - 9:00 AM)">Urgente / Primera hora (7:00 AM - 9:00 AM)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Resumen de Costos -->
@@ -421,7 +461,11 @@
                 </div>
                 <div class="flex justify-between">
                     <span>Transporte Circuito Corto:</span>
-                    <strong id="cart-shipping" class="text-gray-900">$8.000</strong>
+                    <strong id="cart-shipping" class="text-gray-900">$12.000</strong>
+                </div>
+                <div id="row-express-surcharge" class="hidden justify-between text-amber-800 font-bold">
+                    <span>Recargo Despacho Express:</span>
+                    <span id="cart-express-fee">+$15.000</span>
                 </div>
                 <div class="flex justify-between text-base font-extrabold text-emerald-950 pt-2 border-t border-gray-100">
                     <span>Total a Pagar:</span>
@@ -433,7 +477,7 @@
                 Pedir por WhatsApp al Coordinador Comunitario 💬
             </button>
             <p class="text-center text-[10px] text-gray-400 mt-2">
-                🔒 Sin comisiones ocultas • Pago contra entrega o transferencia directa al campesino.
+                🔒 Sin intermediarios • Pago contra entrega o transferencia directa al campesino.
             </p>
         </div>
     </div>
@@ -447,7 +491,7 @@
 
     <!-- MODAL DE CHECKOUT / PEDIDO WHATSAPP -->
     <div id="checkout-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl p-6">
+        <div class="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl p-6 max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between pb-3 border-b border-gray-100 mb-4">
                 <div class="flex items-center gap-2">
                     <span class="text-xl">📋</span>
@@ -470,33 +514,37 @@
                 </div>
 
                 <div>
-                    <label class="block font-semibold text-gray-700 mb-1">Dirección de Entrega en Bogotá / Sabana *</label>
-                    <input type="text" id="client-address" required placeholder="Ej: Calle 127 # 15-40, Apto 302" 
+                    <label class="block font-semibold text-gray-700 mb-1">Dirección Exacta de Tu Casa / Apartamento *</label>
+                    <input type="text" id="client-address" required placeholder="Ej: Calle 127 # 15-40, Apto 302, Barrio Santa Bárbara" 
                            class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2.5 text-xs focus:bg-white focus:ring-1 focus:ring-emerald-700">
                 </div>
 
-                <div class="grid grid-cols-2 gap-2">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <div>
-                        <label class="block font-semibold text-gray-700 mb-1">Zona</label>
+                        <label class="block font-semibold text-gray-700 mb-1">Destino de Entrega</label>
                         <select id="client-zone" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2 text-xs">
+                            <option value="personalizado-domicilio">📍 Directo a tu Domicilio (A tu casa)</option>
                             <option value="bogota-norte">Bogotá Norte</option>
-                            <option value="bogota-centro">Bogotá Chapinero/Centro</option>
-                            <option value="sabana-centro">Sabana Centro</option>
+                            <option value="bogota-centro">Bogotá Chapinero / Centro</option>
+                            <option value="sabana-centro">Sabana Centro (Sopó, Chía, Cajicá)</option>
                             <option value="guasca-recogida">Guasca (Punto JAC)</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block font-semibold text-gray-700 mb-1">Día de Entrega</label>
-                        <select id="client-day" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2 text-xs">
-                            <option value="Próximo Sábado">Próximo Sábado</option>
-                            <option value="Próximo Miércoles">Próximo Miércoles</option>
-                        </select>
+                        <label class="block font-semibold text-gray-700 mb-1">Fecha Programada</label>
+                        <input type="text" id="client-day" readonly 
+                               class="w-full bg-emerald-50 border border-emerald-200 rounded-lg p-2 text-xs text-emerald-950 font-bold">
                     </div>
                 </div>
 
+                <div id="checkout-express-details" class="hidden p-2.5 bg-amber-50 rounded-xl border border-amber-200 text-amber-950 text-[11px]">
+                    <strong>⚡ Modalidad Express Activada:</strong>
+                    <span id="checkout-express-text" class="block text-amber-900 mt-0.5"></span>
+                </div>
+
                 <div>
-                    <label class="block font-semibold text-gray-700 mb-1">Indicaciones u Observaciones</label>
-                    <textarea id="client-notes" rows="2" placeholder="Ej: Dejar en portería si no estoy, tocar el timbre 201" 
+                    <label class="block font-semibold text-gray-700 mb-1">Indicaciones u Observaciones Especiales</label>
+                    <textarea id="client-notes" rows="2" placeholder="Ej: Dejar en recepción si no estoy, timbre 302, indicaciones para el domiciliario..." 
                               class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2 text-xs focus:bg-white focus:ring-1 focus:ring-emerald-700"></textarea>
                 </div>
 
