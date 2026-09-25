@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico y Árbol de Problemas | Proyecto Integrador I - Guasca</title>
+    <meta name="description" content="Fundamentación académica y árbol de problemas del proyecto de comercialización agropecuaria en Guasca. Universidad de La Salle.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-[#f8faf9] text-gray-800 flex flex-col min-h-screen">
+
+    <!-- Barra de Anuncio Académica -->
+    <div class="announcement-bar">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 px-4">
+            <div class="flex items-center gap-2">
+                <span class="badge">UNIVERSIDAD DE LA SALLE</span>
+                <span>Facultad de Ingeniería • Programa de Ingeniería de Software • Proyecto Integrador I</span>
+            </div>
+            <div class="flex items-center gap-3 text-xs">
+                <span>Docente: <strong>Natalia Martínez</strong></span>
+                <span>•</span>
+                <a href="index.html" class="underline hover:text-amber-200">Ir a la Tienda Comunitaria →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navegación -->
+    <header class="navbar-custom">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-emerald-800 flex items-center justify-center text-white text-2xl shadow-md">
+                    🌱
+                </div>
+                <div>
+                    <span class="brand-font text-2xl font-black text-emerald-950 block leading-none">AgroGuasca</span>
+                    <span class="text-xs font-semibold text-emerald-700 tracking-wider uppercase">Portal Académico & Diagnóstico</span>
+                </div>
+            </a>
+
+            <nav class="hidden md:flex items-center gap-2">
+                <a href="index.html" class="nav-link">Tienda Campesina</a>
+                <a href="#diagnostico" class="nav-link">Diagnóstico</a>
+                <a href="#arbol" class="nav-link active">Árbol de Problemas</a>
+                <a href="#metodologia" class="nav-link">Metodología Scrum</a>
+                <a href="productor.html" class="nav-link font-semibold text-emerald-800">Panel Productor</a>
+            </nav>
+
+            <button onclick="window.print()" class="btn-secondary-guasca text-xs py-2 px-3.5" title="Imprimir o guardar como PDF">
+                📄 Exportar / Imprimir
+            </button>
+        </div>
+    </header>
+
+    <!-- ENCABEZADO DEL PROYECTO -->
+    <section class="py-12 bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-4xl">
+                <div class="flex flex-wrap items-center gap-2 mb-4">
+                    <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 text-xs font-bold uppercase tracking-wider">
+                        Del campo al comprador
+                    </span>
+                    <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-bold uppercase tracking-wider">
+                        Vereda La Trinidad • Sector San Francisco (Guasca)
+                    </span>
+                    <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-900 text-xs font-bold uppercase tracking-wider">
+                        ODS 2, 8 y 12
+                    </span>
+                </div>
+
+                <h1 class="text-3xl sm:text-5xl font-black text-emerald-950 leading-tight">
+                    Comercialización de la producción de pequeños agricultores en Guasca, Cundinamarca
+                </h1>
+
+                <p class="mt-4 text-base sm:text-lg text-gray-600 leading-relaxed">
+                    Desarrollo de una solución de software orientada al desarrollo rural bajo el método de Koen (2003), diseñada para conectar la producción agropecuaria diferenciada con compradores urbanos y mitigar el desperdicio del 40.5% de alimentos en origen.
+                </p>
+
+                <!-- Ficha Técnica de Autores y Docente -->
+                <div class="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 p-5 rounded-2xl bg-gray-50 border border-gray-200 text-xs">
+                    <div>
+                        <span class="text-gray-400 block font-semibold uppercase tracking-wider mb-1">Estudiantes Autores</span>
+                        <strong class="text-gray-900 text-sm block">Dilan Santiago Correa Gelves</strong>
+                        <strong class="text-gray-900 text-sm block">Juan David Espitia Gutiérrez</strong>
+                        <span class="text-gray-500">Ingeniería de Software</span>
+                    </div>
+                    <div>
+                        <span class="text-gray-400 block font-semibold uppercase tracking-wider mb-1">Docente & Asignatura</span>
+                        <strong class="text-gray-900 text-sm block">Natalia Martínez</strong>
+                        <span class="text-gray-700 block">Proyecto Integrador I</span>
+                        <span class="text-gray-500">Área de Énfasis: Desarrollo Rural</span>
+                    </div>
+                    <div>
+                        <span class="text-gray-400 block font-semibold uppercase tracking-wider mb-1">Actores Territoriales</span>
+                        <strong class="text-gray-900 text-sm block">Junta de Acción Comunal (JAC)</strong>
+                        <span class="text-gray-700 block">Cooperativa CooTrinidad</span>
+                        <span class="text-emerald-700 font-bold">Sector San Francisco, Guasca</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN DIAGNÓSTICO DETALLADO -->
+    <section id="diagnostico" class="py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                <!-- Columna 1: ¿Qué está ocurriendo y el círculo vicioso? -->
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="bg-white p-8 rounded-3xl border border-gray-200 shadow-sm">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">1</span>
+                            <h2 class="text-2xl font-bold text-gray-900">¿Qué está ocurriendo en el territorio?</h2>
+                        </div>
+                        <p class="text-gray-600 text-sm sm:text-base leading-relaxed">
+                            En la <strong>vereda La Trinidad, sector San Francisco (Guasca, Cundinamarca)</strong>, pequeños productores desarrollan actividades agrícolas —papa, zanahoria, uchuva, fresa y arándanos— y pecuarias, principalmente producción de leche comercializada a través de una cooperativa local. Existen además iniciativas de transformación con valor agregado, como yogurt, arequipe y derivados lácteos.
+                        </p>
+                        <div class="my-4 p-4 rounded-xl bg-amber-50 border-l-4 border-amber-600 text-amber-950 text-sm italic">
+                            "El problema no está en la capacidad productiva, sino en la comercialización. Durante el trabajo de campo con la Junta de Acción Comunal, los propios productores señalaron que la dificultad principal no es producir más, sino tener un producto adecuado, saber comunicarlo, darle valor agregado, encontrar el mercado correcto y llegar al comprador."
+                        </div>
+                        <p class="text-gray-600 text-sm sm:text-base leading-relaxed">
+                            Cuando la producción no encuentra salida, los excedentes <strong>se regalan, se desechan, se destinan al ganado o se dejan perder</strong>: un producto que costó tiempo, jornales e insumos pierde por completo su valor comercial.
+                        </p>
+                    </div>
+
+                    <!-- El Círculo que Refuerza el Problema -->
+                    <div class="bg-white p-8 rounded-3xl border border-gray-200 shadow-sm">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="w-8 h-8 rounded-lg bg-red-100 text-red-800 flex items-center justify-center font-bold">2</span>
+                            <h2 class="text-2xl font-bold text-gray-900">El Círculo que Sostiene el Problema</h2>
+                        </div>
+                        <div class="space-y-3 text-sm text-gray-600">
+                            <div class="flex items-start gap-3 p-3 bg-red-50/60 rounded-xl border border-red-100">
+                                <span class="text-red-700 font-bold">🔄</span>
+                                <div>
+                                    <strong class="text-gray-900">Orientación forzada al mercado local:</strong>
+                                    El mercado tradicional de la plaza no reconoce ni paga el valor diferencial de productos limpios como la fresa orgánica.
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3 p-3 bg-red-50/60 rounded-xl border border-red-100">
+                                <span class="text-red-700 font-bold">🏙️</span>
+                                <div>
+                                    <strong class="text-gray-900">Demanda insatisfecha en la ciudad:</strong>
+                                    Los consumidores en Bogotá buscan estos alimentos saludables, pero los productores de San Francisco no cuentan con el canal logístico directo para llegar a ellos.
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3 p-3 bg-red-50/60 rounded-xl border border-red-100">
+                                <span class="text-red-700 font-bold">📉</span>
+                                <div>
+                                    <strong class="text-gray-900">Inviabilidad y desincentivo:</strong>
+                                    Al no acceder a compradores urbanos, no resulta viable producir en mayor escala, y al no tener volumen agrupado, continúan fuera del mercado.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna 2: ¿A quién afecta, relevancia DNP y consecuencias? -->
+                <div class="lg:col-span-5 space-y-6">
+                    <!-- Afectados -->
+                    <div class="bg-white p-8 rounded-3xl border border-gray-200 shadow-sm">
+                        <h3 class="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+                            <span>👥</span> ¿A quién afecta directamente?
+                        </h3>
+                        <ul class="text-xs sm:text-sm text-gray-600 space-y-3">
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-700 font-bold">•</span>
+                                <span><strong>Familias productoras:</strong> Inestabilidad económica continua al depender de compradores intermediarios informales.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-700 font-bold">•</span>
+                                <span><strong>JAC y Cooperativa:</strong> Debilitamiento del tejido asociativo comunal.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-amber-700 font-bold">•</span>
+                                <span><strong>Población Joven & Relevo Generacional:</strong> Los jóvenes migran por falta de oportunidades viables en el campo, poniendo en riesgo la continuidad de la agricultura campesina.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Datos Nacionales DNP 2016 -->
+                    <div class="bg-gradient-to-br from-emerald-900 to-emerald-950 p-8 rounded-3xl text-white shadow-md">
+                        <span class="text-xs font-bold uppercase tracking-wider text-amber-300">Relevancia Nacional (DNP, 2016)</span>
+                        <div class="text-4xl font-black mt-2 text-white">9,76 Millones</div>
+                        <p class="text-xs text-emerald-200 mt-1">de toneladas de alimentos se pierden y desperdician al año en Colombia (sobre una oferta de 28,5M).</p>
+                        
+                        <div class="mt-6 pt-6 border-t border-emerald-800 space-y-3 text-xs">
+                            <div class="flex justify-between items-center">
+                                <span class="text-emerald-200">Pérdida en Producción Agropecuaria:</span>
+                                <strong class="text-amber-300 text-sm font-bold">40,5 %</strong>
+                            </div>
+                            <div class="w-full bg-emerald-900 h-2 rounded-full overflow-hidden">
+                                <div class="bg-amber-400 h-full w-[40.5%]"></div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-emerald-200">Pérdida en Poscosecha y Acopio:</span>
+                                <strong class="text-white text-sm">19,8 %</strong>
+                            </div>
+                            <p class="text-[11px] text-emerald-300 mt-2 italic">
+                                * La mayor pérdida ocurre justamente en el eslabón donde se encuentran los pequeños productores de Guasca.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Enfoque de Koen -->
+                    <div class="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm text-xs">
+                        <h4 class="font-bold text-gray-900 text-sm mb-2 flex items-center gap-1.5">
+                            <span>📐</span> Definición según Koen (2003)
+                        </h4>
+                        <p class="text-gray-600 leading-relaxed mb-3">
+                            Este reto reúne las cuatro características del método de resolución de problemas en ingeniería:
+                        </p>
+                        <ul class="space-y-1.5 text-gray-700">
+                            <li>✓ <strong>Búsqueda de cambio de A a B:</strong> De producción individual sin demanda previa a oferta consolidada con demanda anticipada.</li>
+                            <li>✓ <strong>Recursos limitados:</strong> Un semestre académico, sin presupuesto y sin estadísticas previas de pérdidas.</li>
+                            <li>✓ <strong>Criterios en conflicto:</strong> Facilidad de uso rural vs funcionalidad avanzada; rapidez de prototipado vs resultados verificables.</li>
+                            <li>✓ <strong>Situación pobremente entendida:</strong> Los requisitos se descubren directamente con la comunidad campesina.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN INTERACTIVA: ÁRBOL DE PROBLEMAS Y ÁRBOL DE OBJETIVOS -->
+    <section id="arbol" class="py-16 bg-gray-100/70 border-y border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-10">
+                <span class="text-xs font-bold text-emerald-700 uppercase tracking-wider bg-emerald-100 px-3 py-1 rounded-full">
+                    Estructura Causal de Ingeniería
+                </span>
+                <h2 class="text-3xl font-black text-emerald-950 mt-3">
+                    Árbol de Problemas y Modelo de Transformación
+                </h2>
+                <p class="text-gray-600 mt-2 text-sm sm:text-base">
+                    Haz clic en los nodos para inspeccionar las causas raíz, el problema focal y los efectos directos detectados en el trabajo de campo en San Francisco.
+                </p>
+
+                <!-- Pestañas Árbol de Problemas vs Árbol de Objetivos -->
+                <div class="mt-6 inline-flex p-1.5 bg-gray-200 rounded-2xl gap-2">
+                    <button id="tab-btn-problem" class="btn-primary-guasca text-xs py-2 px-5">
+                        🌳 Árbol de Problemas (Diagnóstico)
+                    </button>
+                    <button id="tab-btn-solution" class="btn-secondary-guasca text-xs py-2 px-5">
+                        ✨ Árbol de Objetivos (Estado A → B)
+                    </button>
+                </div>
+            </div>
+
+            <!-- VISTA 1: ÁRBOL DE PROBLEMAS -->
+            <div id="view-problem-tree" class="tree-container">
+                <!-- NIVEL 1: EFECTOS (Ramas Superiores) -->
+                <div class="tree-level">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="text-xs font-bold text-red-800 uppercase tracking-wider bg-red-100 px-2.5 py-1 rounded">
+                            ↑ EFECTOS Y CONSECUENCIAS (Impacto Negativo)
+                        </span>
+                        <span class="text-xs text-gray-500">¿Qué pasa si no se atiende?</span>
+                    </div>
+                    <div id="problem-effects-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- Inyectado por arbol.js -->
+                    </div>
+                </div>
+
+                <!-- Conector Visual -->
+                <div class="flex justify-center my-4">
+                    <div class="w-1 h-8 bg-amber-400"></div>
+                </div>
+
+                <!-- NIVEL 2: PROBLEMA CENTRAL (Tronco) -->
+                <div class="tree-level max-w-4xl mx-auto">
+                    <div class="tree-node-card node-problem p-6">
+                        <span class="text-xs font-black uppercase tracking-wider text-amber-900 bg-amber-200 px-3 py-1 rounded-full inline-block mb-2">
+                            🚨 PROBLEMA FOCAL IDENTIFICADO
+                        </span>
+                        <h3 class="text-xl sm:text-2xl font-black text-gray-900">
+                            Dificultad crítica en la comercialización y acceso a mercados de valor
+                        </h3>
+                        <p class="text-xs sm:text-sm text-gray-700 mt-2 max-w-2xl mx-auto">
+                            Pequeños productores de la vereda La Trinidad, sector San Francisco (Guasca, Cundinamarca). A pesar de una alta capacidad productiva y productos con valor diferenciado (fresa orgánica, berries, lácteos), la producción no encuentra salida adecuada y se pierde.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Conector Visual -->
+                <div class="flex justify-center my-4">
+                    <div class="w-1 h-8 bg-emerald-500"></div>
+                </div>
+
+                <!-- NIVEL 3: CAUSAS RAÍZ (Raíces Inferiores) -->
+                <div class="tree-level">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="text-xs font-bold text-emerald-800 uppercase tracking-wider bg-emerald-100 px-2.5 py-1 rounded">
+                            ↓ CAUSAS RAÍZ (Factores de Origen)
+                        </span>
+                        <span class="text-xs text-gray-500">¿Por qué ocurre este problema?</span>
+                    </div>
+                    <div id="problem-causes-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <!-- Inyectado por arbol.js -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- VISTA 2: ÁRBOL DE OBJETIVOS (TRANSICIÓN DE ESTADO A A ESTADO B) -->
+            <div id="view-solution-tree" class="tree-container hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Estado A: Situación Actual -->
+                    <div class="p-6 rounded-2xl bg-red-50/70 border border-red-200">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="w-7 h-7 rounded-full bg-red-600 text-white flex items-center justify-center font-bold text-xs">A</span>
+                            <h3 class="text-lg font-bold text-red-950">Estado Actual (A)</h3>
+                        </div>
+                        <ul class="text-xs sm:text-sm text-gray-700 space-y-3">
+                            <li class="flex items-start gap-2">
+                                <span class="text-red-600 font-bold">✕</span>
+                                <span><strong>Producción individual dispersa:</strong> Cada familia intenta vender por su cuenta en Guasca.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-red-600 font-bold">✕</span>
+                                <span><strong>Sin información de demanda:</strong> Se siembra a ciegas; si la plaza se satura, el precio se derrumba.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-red-600 font-bold">✕</span>
+                                <span><strong>Excedentes desechados o regalados:</strong> Pérdida del esfuerzo e insumos invertidos.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-red-600 font-bold">✕</span>
+                                <span><strong>Desconexión con el consumidor urbano:</strong> La fresa orgánica no encuentra el mercado que la valore.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Estado B: Situación Deseada (AgroGuasca) -->
+                    <div class="p-6 rounded-2xl bg-emerald-50/80 border border-emerald-200">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="w-7 h-7 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-xs">B</span>
+                            <h3 class="text-lg font-bold text-emerald-950">Estado Deseado (B)</h3>
+                        </div>
+                        <ul class="text-xs sm:text-sm text-gray-700 space-y-3">
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-700 font-bold">✓</span>
+                                <span><strong>Oferta consolidada comunitaria:</strong> La JAC y la cooperativa articulan la producción de San Francisco en canastas colectivas.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-700 font-bold">✓</span>
+                                <span><strong>Cosecha bajo demanda anticipada:</strong> Los pedidos se consolidan en la plataforma antes del corte semanal.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-700 font-bold">✓</span>
+                                <span><strong>Circuitos cortos directos:</strong> Contacto continuo con compradores y restaurantes en Bogotá que pagan precio justo.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-700 font-bold">✓</span>
+                                <span><strong>Rentabilidad y permanencia juvenil:</strong> Retorno económico que incentiva el relevo generacional en la vereda.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Objetivos Específicos del Proyecto -->
+                <div class="mt-8 pt-6 border-t border-gray-200">
+                    <h4 class="text-base font-bold text-gray-900 mb-4">Objetivos Específicos de Ingeniería (Sprints)</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 text-xs">
+                        <div class="p-3 bg-white rounded-xl border border-gray-200">
+                            <strong class="text-emerald-800 block mb-1">Obj 1: Requisitos</strong>
+                            <p class="text-gray-600">Historias de usuario priorizadas mediante sesiones de trabajo con la JAC y productores.</p>
+                        </div>
+                        <div class="p-3 bg-white rounded-xl border border-gray-200">
+                            <strong class="text-emerald-800 block mb-1">Obj 2: Diseño UI/UX</strong>
+                            <p class="text-gray-600">Arquitectura y prototipos adaptados a baja conectividad y dispositivos móviles rurales.</p>
+                        </div>
+                        <div class="p-3 bg-white rounded-xl border border-gray-200">
+                            <strong class="text-emerald-800 block mb-1">Obj 3: Construcción</strong>
+                            <p class="text-gray-600">Desarrollo incremental en Sprints de 2 semanas validados al cierre de cada ciclo.</p>
+                        </div>
+                        <div class="p-3 bg-white rounded-xl border border-gray-200">
+                            <strong class="text-emerald-800 block mb-1">Obj 4: Pruebas</strong>
+                            <p class="text-gray-600">Pruebas funcionales y de aceptación de usuario con productores y compradores reales.</p>
+                        </div>
+                        <div class="p-3 bg-white rounded-xl border border-gray-200">
+                            <strong class="text-emerald-800 block mb-1">Obj 5: Sostenibilidad</strong>
+                            <p class="text-gray-600">Manual de uso, capacitación y traspaso de administración a la cooperativa y JAC.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN METODOLOGÍA SCRUM ADAPTADA -->
+    <section id="metodologia" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-3xl mb-12">
+                <span class="text-xs font-bold text-emerald-700 uppercase tracking-wider">Marco de Trabajo</span>
+                <h2 class="text-3xl font-extrabold text-emerald-950 mt-1">
+                    Enfoque Ágil, no Tradicional
+                </h2>
+                <p class="text-gray-600 mt-2 text-sm sm:text-base leading-relaxed">
+                    Un modelo en cascada tradicional exige requisitos congelados desde el inicio. En San Francisco, la situación es poco entendida y carece de datos iniciales. Scrum permite entregar <strong>incrementos verificables</strong> y corregir el rumbo con la Junta de Acción Comunal en cada iteración, restaurando la confianza comunitaria.
+                </p>
+            </div>
+
+            <!-- Las 5 Fases -->
+            <div class="space-y-4">
+                <div class="p-5 rounded-2xl bg-gray-50 border border-gray-200 flex flex-col md:flex-row gap-4 items-start">
+                    <span class="px-3 py-1 bg-emerald-800 text-white text-xs font-bold rounded-lg shrink-0">FASE 1</span>
+                    <div>
+                        <h4 class="font-bold text-gray-900 text-base">Levantamiento de Requisitos Comunitarios</h4>
+                        <p class="text-xs sm:text-sm text-gray-600 mt-1">Entrevistas semiestructuradas y observación en campo con la JAC y campesinos en San Francisco. Documentación en historias de usuario priorizadas por impacto comercial inmediato.</p>
+                    </div>
+                </div>
+
+                <div class="p-5 rounded-2xl bg-gray-50 border border-gray-200 flex flex-col md:flex-row gap-4 items-start">
+                    <span class="px-3 py-1 bg-emerald-800 text-white text-xs font-bold rounded-lg shrink-0">FASE 2</span>
+                    <div>
+                        <h4 class="font-bold text-gray-900 text-base">Diseño de Arquitectura y Prototipado Inclusivo</h4>
+                        <p class="text-xs sm:text-sm text-gray-600 mt-1">Diseño de interfaces con botones amplios y tipografía de alto contraste, garantizando compatibilidad con redes móviles 3G/4G intermitentes del territorio y flujo directo vía WhatsApp.</p>
+                    </div>
+                </div>
+
+                <div class="p-5 rounded-2xl bg-gray-50 border border-gray-200 flex flex-col md:flex-row gap-4 items-start">
+                    <span class="px-3 py-1 bg-emerald-800 text-white text-xs font-bold rounded-lg shrink-0">FASE 3</span>
+                    <div>
+                        <h4 class="font-bold text-gray-900 text-base">Construcción Incremental por Sprints (Frontend + Lógica de Gestión)</h4>
+                        <p class="text-xs sm:text-sm text-gray-600 mt-1">Desarrollo modular de catálogo de cosechas, consolidación de canasta comunitaria, módulo de oferta anticipada y panel para que el campesino publique sus lotes en segundos.</p>
+                    </div>
+                </div>
+
+                <div class="p-5 rounded-2xl bg-gray-50 border border-gray-200 flex flex-col md:flex-row gap-4 items-start">
+                    <span class="px-3 py-1 bg-emerald-800 text-white text-xs font-bold rounded-lg shrink-0">FASE 4</span>
+                    <div>
+                        <h4 class="font-bold text-gray-900 text-base">Pruebas de Aceptación con Productores y Compradores Urbanos</h4>
+                        <p class="text-xs sm:text-sm text-gray-600 mt-1">Validación de extremo a extremo: desde la publicación del lote de fresas por Don Hernando hasta la recepción de la orden en WhatsApp por el coordinador de la cooperativa.</p>
+                    </div>
+                </div>
+
+                <div class="p-5 rounded-2xl bg-gray-50 border border-gray-200 flex flex-col md:flex-row gap-4 items-start">
+                    <span class="px-3 py-1 bg-emerald-800 text-white text-xs font-bold rounded-lg shrink-0">FASE 5</span>
+                    <div>
+                        <h4 class="font-bold text-gray-900 text-base">Despliegue Abierto y Esquema de Sostenibilidad</h4>
+                        <p class="text-xs sm:text-sm text-gray-600 mt-1">Publicación en la nube para acceso público 24/7 sin costo de servidor, capacitación a líderes de la JAC y entrega del rol de administrador para la continuidad del proyecto.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- REFERENCIAS BIBLIOGRÁFICAS -->
+    <section class="py-12 bg-gray-50 border-t border-gray-200 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h3 class="font-bold text-gray-900 text-sm mb-4 uppercase tracking-wider">Referencias Documentales</h3>
+            <ul class="space-y-2 text-gray-600">
+                <li>• <strong>Agencia de Desarrollo Rural. (2024).</strong> <em>Circuitos cortos de comercialización.</em> ADR. https://www.adr.gov.co/wp-content/uploads/2024/12/Circuitos-cortos-de-Comercializacion.pdf</li>
+                <li>• <strong>Departamento Nacional de Planeación. (2016).</strong> <em>Pérdida y desperdicio de alimentos en Colombia.</em> DNP. https://colaboracion.dnp.gov.co/CDT/Prensa/Publicaciones/Perdida%20y%20desperdicio%20de%20alimentos%20en%20colombia.pdf</li>
+                <li>• <strong>Koen, B. V. (2003).</strong> <em>Discussion of the method: Conducting the engineer's approach to problem solving.</em> Oxford University Press.</li>
+                <li>• <strong>Organización de las Naciones Unidas para la Alimentación y la Agricultura. (s.f.).</strong> <em>Circuitos cortos de comercialización en la agricultura familiar.</em> FAO. https://www.fao.org/family-farming/detail/en/c/1480838/</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- MODAL DE DETALLE DE NODO DEL ÁRBOL -->
+    <div id="tree-node-detail-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl p-6">
+            <div class="flex items-center justify-between pb-3 border-b border-gray-100 mb-3">
+                <span id="tree-detail-type" class="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded"></span>
+                <button onclick="closeTreeDetail()" class="text-gray-400 hover:text-gray-700 font-bold text-lg">✕</button>
+            </div>
+            <h3 id="tree-detail-title" class="text-lg font-bold text-gray-900 mb-2"></h3>
+            <p id="tree-detail-desc" class="text-sm text-gray-600 leading-relaxed"></p>
+            <div class="mt-6 flex justify-end">
+                <button onclick="closeTreeDetail()" class="btn-primary-guasca text-xs py-2 px-4">
+                    Entendido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/arbol.js"></script>
+</body>
+</html>

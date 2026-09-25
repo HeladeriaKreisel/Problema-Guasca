@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal del Productor Campesino & JAC | AgroGuasca</title>
+    <meta name="description" content="Panel de control para que los productores de la Vereda La Trinidad y la Junta de Acción Comunal publiquen cosechas y gestionen pedidos urbanos.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-[#f8faf9] text-gray-800 flex flex-col min-h-screen">
+
+    <!-- Barra de Anuncio -->
+    <div class="announcement-bar bg-emerald-950">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 px-4 text-xs">
+            <div class="flex items-center gap-2">
+                <span class="badge">MÓDULO RURAL</span>
+                <span>Junta de Acción Comunal & Cooperativa CooTrinidad • Vereda La Trinidad, Sector San Francisco</span>
+            </div>
+            <a href="index.html" class="underline hover:text-amber-200">← Volver a la Tienda Campesina</a>
+        </div>
+    </div>
+
+    <!-- Navegación -->
+    <header class="navbar-custom">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-emerald-800 flex items-center justify-center text-white text-2xl shadow-md">
+                    👨‍🌾
+                </div>
+                <div>
+                    <span class="brand-font text-2xl font-black text-emerald-950 block leading-none">AgroGuasca</span>
+                    <span class="text-xs font-semibold text-emerald-700 tracking-wider uppercase">Panel Campesino & JAC</span>
+                </div>
+            </a>
+
+            <nav class="hidden md:flex items-center gap-2">
+                <a href="index.html" class="nav-link">Tienda Campesina</a>
+                <a href="#publicar" class="nav-link active">Publicar Lote</a>
+                <a href="#lotes" class="nav-link">Mis Lotes</a>
+                <a href="#pedidos" class="nav-link">Pedidos Recibidos</a>
+                <a href="proyecto.html" class="nav-link text-amber-800 font-bold bg-amber-50">Árbol de Problemas</a>
+            </nav>
+
+            <button onclick="resetDemoData()" class="text-xs text-gray-500 hover:text-red-700 underline p-2" title="Restablecer datos originales de Guasca">
+                Restablecer Datos Demo
+            </button>
+        </div>
+    </header>
+
+    <!-- ENCABEZADO Y MÉTRICAS CLAVE -->
+    <section class="py-10 bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full">
+                        Administración Comunitaria
+                    </span>
+                    <h1 class="text-3xl font-black text-gray-900 mt-2">
+                        Control de Oferta y Cosechas en San Francisco
+                    </h1>
+                    <p class="text-sm text-gray-500 mt-1">
+                        Publica tu producción con antelación para que los compradores urbanos reserven antes del día de corte semanal.
+                    </p>
+                </div>
+
+                <a href="#publicar" class="btn-primary-guasca text-sm py-2.5 px-4 self-start md:self-auto">
+                    + Registrar Nueva Cosecha
+                </a>
+            </div>
+
+            <!-- Tarjetas de Métricas -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="hero-stat-card">
+                    <div class="hero-stat-icon bg-emerald-100 text-emerald-800">
+                        📦
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 block">Lotes Publicados</span>
+                        <strong class="text-2xl font-black text-gray-900" id="metric-total-lots">0</strong>
+                    </div>
+                </div>
+
+                <div class="hero-stat-card">
+                    <div class="hero-stat-icon bg-amber-100 text-amber-800">
+                        ⚖️
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 block">Oferta Disponible</span>
+                        <strong class="text-2xl font-black text-gray-900" id="metric-active-stock">0 kg</strong>
+                    </div>
+                </div>
+
+                <div class="hero-stat-card">
+                    <div class="hero-stat-icon bg-blue-100 text-blue-800">
+                        📋
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 block">Pedidos Urbanos</span>
+                        <strong class="text-2xl font-black text-gray-900" id="metric-total-orders">0</strong>
+                    </div>
+                </div>
+
+                <div class="hero-stat-card">
+                    <div class="hero-stat-icon bg-purple-100 text-purple-800">
+                        💰
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 block">Ingreso Directo</span>
+                        <strong class="text-2xl font-black text-emerald-900" id="metric-estimated-revenue">$0</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FORMULARIO DE PUBLICACIÓN DE NUEVO LOTE -->
+    <section id="publicar" class="py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-3xl p-6 sm:p-10 border border-gray-200 shadow-sm">
+                <div class="max-w-2xl mb-8">
+                    <h2 class="text-2xl font-black text-gray-900">Publicar Nueva Cosecha o Producto Transformado</h2>
+                    <p class="text-sm text-gray-600 mt-1">
+                        Llena este formulario para que tu producto aparezca inmediatamente en la tienda para compradores en Bogotá y Sabana.
+                    </p>
+                </div>
+
+                <form id="new-lot-form" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Nombre del Producto -->
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Nombre del Producto *</label>
+                            <input type="text" id="lot-name" required placeholder="Ej: Fresa Orgánica de Altura, Papa Criolla, Yogurt..." 
+                                   class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:bg-white focus:ring-2 focus:ring-emerald-700 focus:outline-none">
+                        </div>
+
+                        <!-- Categoría -->
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Categoría *</label>
+                            <select id="lot-category" required class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:bg-white focus:ring-2 focus:ring-emerald-700 focus:outline-none">
+                                <option value="frutas">🍓 Frutas y Berries Andinos</option>
+                                <option value="tuberculos">🥔 Tubérculos y Hortalizas</option>
+                                <option value="lacteos">🧀 Lácteos y Derivados Artesanales</option>
+                                <option value="canastas">🧺 Canastas Familiares</option>
+                            </select>
+                        </div>
+
+                        <!-- Nombre del Productor -->
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Nombre del Productor / Asociación *</label>
+                            <input type="text" id="lot-producer" required placeholder="Ej: Don Hernando Gómez, Cooperativa CooTrinidad" 
+                                   class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:bg-white focus:ring-2 focus:ring-emerald-700 focus:outline-none">
+                        </div>
+
+                        <!-- Finca o Parcela -->
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Finca o Sector *</label>
+                            <input type="text" id="lot-finca" required placeholder="Ej: Finca La Floresta, Sector San Francisco" 
+                                   class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:bg-white focus:ring-2 focus:ring-emerald-700 focus:outline-none">
+                        </div>
+
+                        <!-- Precio y Unidad -->
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Precio (COP) *</label>
+                                <input type="number" id="lot-price" required min="500" step="100" placeholder="Ej: 8500" 
+                                       class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:bg-white focus:ring-2 focus:ring-emerald-700 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Unidad de Venta *</label>
+                                <input type="text" id="lot-unit" required placeholder="Ej: Kilo, Caja 500g, Litro" 
+                                       class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:bg-white focus:ring-2 focus:ring-emerald-700 focus:outline-none">
+                            </div>
+                        </div>
+
+                        <!-- Cantidad Disponible -->
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Cantidad Estimada *</label>
+                                <input type="number" id="lot-stock" required min="1" placeholder="Ej: 50" 
+                                       class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:bg-white focus:ring-2 focus:ring-emerald-700 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Fecha Estimada de Corte</label>
+                                <input type="text" id="lot-date" placeholder="Ej: Cosecha del Sábado" 
+                                       class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:bg-white focus:ring-2 focus:ring-emerald-700 focus:outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Descripción -->
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Descripción del Producto y Prácticas Limpias</label>
+                        <textarea id="lot-desc" rows="3" placeholder="Describe cómo lo cultivaste, abonos utilizados, sabor y por qué es un producto limpio..." 
+                                  class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:bg-white focus:ring-2 focus:ring-emerald-700 focus:outline-none"></textarea>
+                    </div>
+
+                    <!-- Opciones de Diferenciación -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Etiqueta Destacada</label>
+                            <input type="text" id="lot-badge" placeholder="Ej: 100% Orgánica, Receta Ancestral, Cero Químicos" 
+                                   class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:bg-white focus:ring-2 focus:ring-emerald-700 focus:outline-none">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">URL Foto (Opcional)</label>
+                            <input type="url" id="lot-image" placeholder="Deja en blanco para asignar foto automática" 
+                                   class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:bg-white focus:ring-2 focus:ring-emerald-700 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <!-- Checkbox de Demanda Anticipada -->
+                    <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200 flex items-start gap-3">
+                        <input type="checkbox" id="lot-anticipation" checked class="mt-1 w-5 h-5 rounded text-amber-600 focus:ring-amber-500">
+                        <div>
+                            <label for="lot-anticipation" class="font-bold text-sm text-amber-950 block cursor-pointer">
+                                🌱 Habilitar Cosecha Bajo Pedido (Demanda Anticipada)
+                            </label>
+                            <p class="text-xs text-amber-900 mt-0.5">
+                                Permite que los compradores urbanos reserven este producto antes de que sea cortado en la parcela, garantizando venta total y 0 desperdicio.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-3 pt-4 border-t border-gray-100">
+                        <button type="reset" class="btn-secondary-guasca py-3 px-6 text-sm">
+                            Limpiar Formulario
+                        </button>
+                        <button type="submit" class="btn-primary-guasca py-3 px-8 text-sm font-bold shadow-lg">
+                            ✅ Publicar Cosecha en la Tienda
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- LISTADO DE LOTES PUBLICADOS -->
+    <section id="lotes" class="py-12 bg-gray-50 border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h2 class="text-2xl font-black text-gray-900">Lotes Activos en Comercialización</h2>
+                    <p class="text-xs text-gray-500">Listado sincronizado en tiempo real con la tienda de compradores.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-3xl border border-gray-200 overflow-hidden shadow-sm">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-gray-50/80 border-b border-gray-100 text-xs text-gray-500 uppercase font-bold">
+                            <tr>
+                                <th class="py-3.5 px-4">Producto & Productor</th>
+                                <th class="py-3.5 px-4">Categoría</th>
+                                <th class="py-3.5 px-4">Precio</th>
+                                <th class="py-3.5 px-4">Inventario</th>
+                                <th class="py-3.5 px-4">Modalidad</th>
+                                <th class="py-3.5 px-4 text-right">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="producer-lots-table">
+                            <!-- Inyectado dinámicamente por productor.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LISTADO DE PEDIDOS DE COMPRADORES -->
+    <section id="pedidos" class="py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-6">
+                <h2 class="text-2xl font-black text-gray-900">Pedidos Urbanos Recibidos</h2>
+                <p class="text-xs text-gray-500">Órdenes generadas por compradores en Bogotá y Sabana para consolidación de la JAC.</p>
+            </div>
+
+            <div id="producer-orders-list">
+                <!-- Inyectado dinámicamente por productor.js -->
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-900 text-gray-400 py-8 mt-auto text-xs border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p>AgroGuasca • Sistema de Gestión Comunitaria para la Vereda La Trinidad, Sector San Francisco (Guasca)</p>
+            <p class="text-gray-500 mt-1">Proyecto Integrador I - Universidad de La Salle • Dilan Santiago Correa Gelves & Juan David Espitia Gutiérrez</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/productor.js"></script>
+</body>
+</html>

@@ -1,0 +1,528 @@
+/* ==========================================================================
+   AgroGuasca - Del Campo al Comprador (Vereda La Trinidad, Guasca)
+   Proyecto Integrador I - Universidad de La Salle
+   Estilos CSS Principales
+   ========================================================================== */
+
+:root {
+    --primary-900: #0f2d1e;
+    --primary-800: #1b4332;
+    --primary-700: #2d6a4f;
+    --primary-600: #40916c;
+    --primary-500: #52b788;
+    --primary-400: #74c69d;
+    --primary-100: #d8f3dc;
+    --primary-50:  #f0fdf4;
+
+    --earth-900: #3e2723;
+    --earth-700: #5d4037;
+    --earth-500: #8d6e63;
+    --earth-100: #efebe9;
+
+    --accent-gold: #d97706;
+    --accent-gold-light: #fef3c7;
+    --accent-terracotta: #c2410c;
+
+    --bg-page: #f8faf9;
+    --bg-card: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #64748b;
+    --border-subtle: #e2e8f0;
+
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-heading: 'Outfit', system-ui, sans-serif;
+
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --radius-full: 9999px;
+
+    --shadow-soft: 0 4px 20px -2px rgba(15, 45, 30, 0.07);
+    --shadow-hover: 0 12px 30px -4px rgba(15, 45, 30, 0.16);
+    --shadow-glass: 0 8px 32px 0 rgba(15, 45, 30, 0.1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-sans);
+    color: var(--text-main);
+    background-color: var(--bg-page);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Tipografía */
+h1, h2, h3, h4, .brand-font {
+    font-family: var(--font-heading);
+    color: var(--primary-900);
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+}
+
+/* Barra Superior de Anuncios */
+.announcement-bar {
+    background: linear-gradient(90deg, #1b4332 0%, #2d6a4f 100%);
+    color: #ffffff;
+    font-size: 0.85rem;
+    padding: 8px 16px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.announcement-bar span.badge {
+    background-color: #fef08a;
+    color: #854d0e;
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    font-weight: 700;
+    font-size: 0.75rem;
+    margin-right: 8px;
+}
+
+/* Navbar */
+.navbar-custom {
+    background-color: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-subtle);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: all 0.2s ease;
+}
+
+.nav-link {
+    color: var(--text-main);
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 8px 14px;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: var(--primary-700);
+    background-color: var(--primary-50);
+}
+
+/* Botones */
+.btn-primary-guasca {
+    background-color: var(--primary-700);
+    color: white;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: var(--radius-md);
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(45, 106, 79, 0.25);
+}
+
+.btn-primary-guasca:hover {
+    background-color: var(--primary-800);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(45, 106, 79, 0.35);
+    color: white;
+}
+
+.btn-secondary-guasca {
+    background-color: white;
+    color: var(--primary-800);
+    border: 1.5px solid var(--primary-600);
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.btn-secondary-guasca:hover {
+    background-color: var(--primary-50);
+    border-color: var(--primary-700);
+    color: var(--primary-900);
+}
+
+.btn-accent {
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+    color: white;
+    border: none;
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.25);
+}
+
+.btn-accent:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(217, 119, 6, 0.35);
+    color: white;
+}
+
+/* Hero Section */
+.hero-guasca {
+    background: radial-gradient(circle at 10% 20%, rgba(45, 106, 79, 0.08) 0%, rgba(248, 250, 249, 0) 50%),
+                radial-gradient(circle at 90% 80%, rgba(217, 119, 6, 0.07) 0%, rgba(248, 250, 249, 0) 50%);
+    padding: 60px 0 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: var(--radius-full);
+    margin-bottom: 18px;
+}
+
+.hero-stat-card {
+    background: white;
+    border-radius: var(--radius-md);
+    padding: 18px;
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-soft);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: transform 0.2s;
+}
+
+.hero-stat-card:hover {
+    transform: translateY(-3px);
+}
+
+.hero-stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+}
+
+/* Tarjeta de Producto */
+.product-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-subtle);
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+}
+
+.product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-hover);
+    border-color: #cbd5e1;
+}
+
+.product-img-wrapper {
+    position: relative;
+    height: 210px;
+    overflow: hidden;
+    background-color: #f1f5f9;
+}
+
+.product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.product-card:hover .product-img {
+    transform: scale(1.05);
+}
+
+.product-badge-float {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    color: var(--primary-800);
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.product-producer-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--earth-700);
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.fair-trade-meter {
+    background-color: var(--primary-50);
+    border-left: 3px solid var(--primary-600);
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 0.78rem;
+    color: var(--primary-800);
+    font-weight: 600;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Árbol de Problemas Interactivo */
+.tree-container {
+    background: white;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-subtle);
+    padding: 32px 24px;
+    box-shadow: var(--shadow-soft);
+}
+
+.tree-level {
+    margin-bottom: 28px;
+    position: relative;
+}
+
+.tree-node-card {
+    border-radius: var(--radius-md);
+    padding: 16px 20px;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+}
+
+.tree-node-card:hover {
+    transform: translateY(-3px);
+}
+
+.node-effect {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #991b1b;
+}
+
+.node-effect:hover {
+    border-color: #ef4444;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.18);
+}
+
+.node-problem {
+    background: #fffbeb;
+    border-color: #fde68a;
+    color: #92400e;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(217, 119, 6, 0.15);
+}
+
+.node-cause {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+    color: #166534;
+}
+
+.node-cause:hover {
+    border-color: #22c55e;
+    box-shadow: 0 4px 14px rgba(34, 197, 94, 0.18);
+}
+
+/* Carrito Flotante & Drawer */
+.cart-floating-btn {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    background-color: var(--primary-800);
+    color: white;
+    width: 62px;
+    height: 62px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: 0 8px 24px rgba(27, 67, 50, 0.35);
+    border: 2px solid white;
+    cursor: pointer;
+    z-index: 99;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.cart-floating-btn:hover {
+    transform: scale(1.08);
+    background-color: var(--primary-700);
+}
+
+.cart-count-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background-color: #ef4444;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 800;
+    width: 22px;
+    height: 22px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+}
+
+/* Modal Drawer Carrito */
+.drawer-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.drawer-backdrop.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.drawer-panel {
+    position: fixed;
+    top: 0;
+    right: -460px;
+    width: 100%;
+    max-width: 440px;
+    height: 100%;
+    background: white;
+    z-index: 1001;
+    box-shadow: -8px 0 32px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.drawer-panel.active {
+    right: 0;
+}
+
+/* Toast Notifications */
+.toast-container {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    pointer-events: none;
+}
+
+.toast-msg {
+    background: #1f2937;
+    color: white;
+    padding: 12px 20px;
+    border-radius: var(--radius-md);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: auto;
+}
+
+@keyframes toastIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Chips de Categorías */
+.category-chip {
+    padding: 8px 18px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-subtle);
+    background: white;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.category-chip:hover {
+    background-color: #f1f5f9;
+    color: var(--text-main);
+}
+
+.category-chip.active {
+    background-color: var(--primary-700);
+    color: white;
+    border-color: var(--primary-700);
+    box-shadow: 0 3px 10px rgba(45, 106, 79, 0.25);
+}
+
+/* Resumen del Proyecto y ODS */
+.ods-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    color: white;
+    font-weight: 700;
+    font-size: 0.8rem;
+}
+
+.ods-2 { background-color: #d3a029; }
+.ods-8 { background-color: #a21942; }
+.ods-12 { background-color: #bf8b2e; }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .drawer-panel {
+        max-width: 100%;
+    }
+    .hero-guasca {
+        padding: 30px 0 20px;
+    }
+}
