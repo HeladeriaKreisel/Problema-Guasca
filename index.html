@@ -421,32 +421,37 @@
                 <!-- Se actualiza dinámicamente según día y hora en app.js -->
             </div>
 
-            <!-- Opción Express / Fecha personalizada elegida por el cliente -->
+            <!-- Opción Express Dinámica según urgencia y antelación -->
             <div class="p-3 bg-amber-50 rounded-xl border border-amber-200">
                 <div class="flex items-start gap-2">
                     <input type="checkbox" id="express-delivery-check" class="mt-0.5 w-4 h-4 text-amber-600 rounded cursor-pointer">
                     <div class="flex-1">
                         <label for="express-delivery-check" class="font-bold text-amber-950 block cursor-pointer">
-                            ⚡ ¿Lo quieres antes? Despacho Express / Fecha Personalizada (+ $15.000)
+                            ⚡ ¿Lo quieres antes? Despacho Express con Tarifa Dinámica
                         </label>
                         <p class="text-[11px] text-amber-800 mt-0.5">
-                            Cosecha y despacho individual exclusivo directo desde Guasca el día y hora que elijas.
+                            El precio varía según qué tan rápido lo necesites (ej. mañana a primera hora es más costoso por cosecha de madrugada; con más días de antelación baja hasta la <strong>tarifa mínima de $14.000</strong>).
                         </p>
                     </div>
                 </div>
 
                 <div id="express-date-picker-box" class="hidden mt-2.5 pt-2 border-t border-amber-200 space-y-2">
                     <div>
-                        <label class="block text-[11px] font-bold text-amber-950 mb-1">Elige la fecha que te gustaría recibirlo:</label>
+                        <label class="block text-[11px] font-bold text-amber-950 mb-1">Fecha en que deseas recibirlo:</label>
                         <input type="date" id="express-date-input" class="w-full bg-white border border-amber-300 rounded-lg p-2 text-xs text-gray-800">
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-amber-950 mb-1">Franja horaria preferida:</label>
                         <select id="express-time-slot" class="w-full bg-white border border-amber-300 rounded-lg p-2 text-xs text-gray-800">
+                            <option value="Urgente / Primera hora (7:00 AM - 9:00 AM)">Urgente / Primera hora (7:00 AM - 9:00 AM)</option>
                             <option value="Mañana (8:00 AM - 12:00 PM)">Mañana (8:00 AM - 12:00 PM)</option>
                             <option value="Tarde (1:00 PM - 5:00 PM)">Tarde (1:00 PM - 5:00 PM)</option>
-                            <option value="Urgente / Primera hora (7:00 AM - 9:00 AM)">Urgente / Primera hora (7:00 AM - 9:00 AM)</option>
                         </select>
+                    </div>
+
+                    <!-- Indicador dinámico en vivo de la tarifa calculada -->
+                    <div id="express-fee-info-box" class="p-2.5 bg-amber-100/80 rounded-xl border border-amber-300 text-xs mt-2">
+                        <!-- Inyectado dinámicamente por app.js -->
                     </div>
                 </div>
             </div>

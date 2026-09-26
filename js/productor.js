@@ -143,9 +143,10 @@ function renderIncomingOrders() {
                     <p class="text-xs text-gray-600">📍 Entrega: ${order.client.address} (${order.client.zone})</p>
                     <p class="text-xs text-emerald-700 font-semibold mt-1">🗓️ Fecha de entrega: ${order.client.deliveryDay}</p>
                     ${order.client.isExpress ? `
-                        <span class="inline-block mt-1 text-[11px] font-bold bg-amber-100 text-amber-900 px-2 py-0.5 rounded border border-amber-300">
-                            ⚡ Prioridad Express: Despacho Directo Solicitado
-                        </span>
+                        <div class="mt-1.5 p-2 bg-amber-50 rounded-lg border border-amber-300 text-[11px] text-amber-950 font-bold">
+                            ⚡ ${order.client.expressTier || 'Despacho Express'} (+ $${(order.client.expressFee || 14000).toLocaleString('es-CO')})
+                            <span class="block font-normal text-amber-800 text-[10px]">Franja: ${order.client.customSlot || 'Inmediata'}</span>
+                        </div>
                     ` : ''}
                     ${order.client.notes ? `<p class="text-xs text-gray-500 italic mt-1">"${order.client.notes}"</p>` : ''}
                 </div>

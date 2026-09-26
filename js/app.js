@@ -12,9 +12,12 @@ const AppState = {
     searchQuery: '',
     deliveryZone: 'personalizado-domicilio',
     isExpressDelivery: false,
-    expressSurcharge: 15000,
+    expressFee: 14000,
+    expressMinFee: 14000,
+    expressTierName: 'Tarifa Mínima Express',
+    expressReason: '',
     customDeliveryDate: '',
-    customDeliverySlot: 'Mañana (8:00 AM - 12:00 PM)',
+    customDeliverySlot: 'Urgente / Primera hora (7:00 AM - 9:00 AM)',
     deliveryCosts: {
         'personalizado-domicilio': 12000,
         'bogota-norte': 8000,
@@ -111,6 +114,113 @@ function getCalculatedDeliveryInfo() {
     };
 }
 
+// Cálculo dinámico de tarifa express según nivel de urgencia y tiempo de respuesta campesino
+function calculateDynamicExpressFee(dateStr, slotStr) {
+    const minFee = 14000; // Tarifa mínima obligatoria
+    if (!dateStr) {
+        return {
+            fee: minFee,
+            tierName: '✅ Tarifa Mínima Express',
+            badgeClass: 'bg-emerald-100 text-emerald-900 border-emerald-300',
+            reason: 'Tarifa mínima base para despacho individual exclusivo en fecha programada con antelación.',
+            diffHours: 48,
+            isMinFee: true
+        };
+    }
+
+    const now = new Date();
+    const [year, month, day] = dateStr.split('-').map(Number);
+
+    // Asignar hora aproximada según franja horaria seleccionada
+    let targetHour = 10;
+    if (slotStr && (slotStr.includes('7:00 AM') || slotStr.includes('Primera hora'))) {
+        targetHour = 7.5; // 7:30 AM
+    } else if (slotStr && (slotStr.includes('8:00 AM') || slotStr.includes('Mañana'))) {
+        targetHour = 10.0; // 10:00 AM
+    } else if (slotStr && (slotStr.includes('1:00 PM') || slotStr.includes('Tarde'))) {
+        targetHour = 14.5; // 2:30 PM
+    }
+
+    const targetDate = new Date(year, month - 1, day, Math.floor(targetHour), (targetHour % 1) * 60, 0);
+    const diffMs = targetDate.getTime() - now.getTime();
+    const diffHours = diffMs / (1000 * 60 * 60);
+
+    // Escala según rapidez y esfuerzo logístico de la comunidad:
+    // 1. Menos de 15 horas (ej: pedido hoy en la noche a las 7:00 PM para mañana a primera hora):
+    if (diffHours <= 15) {
+        return {
+            fee: 28000,
+            tierName: '🔥 Ultra-Urgente (Madrugada)',
+            badgeClass: 'bg-red-100 text-red-900 border-red-300',
+            reason: `¡Máxima rapidez (${Math.max(1, Math.round(diffHours))}h de margen)! Requiere cosecha al alba en la parcela y despacho individual saliendo a las 5:00 AM desde Guasca.`,
+            diffHours,
+            isMinFee: false
+        };
+    }
+    // 2. Entre 15 y 26 horas (ej: pedido para mañana en la tarde o mediodía):
+    else if (diffHours <= 26) {
+        return {
+            fee: 22000,
+            tierName: '⚡ Urgente (Día Siguiente)',
+            badgeClass: 'bg-amber-100 text-amber-900 border-amber-300',
+            reason: `Antelación moderada (~${Math.round(diffHours)}h). Permite cosechar al amanecer y realizar flete directo hacia tu domicilio en el día.`,
+            diffHours,
+            isMinFee: false
+        };
+    }
+    // 3. Entre 27 y 44 horas (ej: pasado mañana):
+    else if (diffHours <= 44) {
+        return {
+            fee: 17000,
+            tierName: '🕒 Prioritario Intermedio (36h)',
+            badgeClass: 'bg-blue-100 text-blue-900 border-blue-300',
+            reason: `Antelación de ~${Math.round(diffHours)}h. Permite coordinar con el agricultor con un día completo de anticipación sin sobrecostos nocturnos.`,
+            diffHours,
+            isMinFee: false
+        };
+    }
+    // 4. Más de 44 horas (más de 2 días de antelación): TARIFA MÍNIMA
+    else {
+        return {
+            fee: minFee,
+            tierName: '✅ Tarifa Mínima Express (Anticipada)',
+            badgeClass: 'bg-emerald-100 text-emerald-900 border-emerald-300',
+            reason: `¡Excelente anticipación (${Math.round(diffHours)}h)! Los agricultores programan la recolección sin prisas. Se aplica la tarifa mínima legal de despacho individual.`,
+            diffHours,
+            isMinFee: true
+        };
+    }
+}
+
+// Actualizar caja de información de tarifa express en el carrito
+function updateExpressInfoBox() {
+    const infoBox = document.getElementById('express-fee-info-box');
+    if (!infoBox) return;
+
+    const rate = calculateDynamicExpressFee(AppState.customDeliveryDate, AppState.customDeliverySlot);
+    AppState.expressFee = rate.fee;
+    AppState.expressTierName = rate.tierName;
+    AppState.expressReason = rate.reason;
+
+    infoBox.innerHTML = `
+        <div class="flex items-center justify-between font-bold mb-1">
+            <span class="px-2 py-0.5 rounded text-[11px] border ${rate.badgeClass}">
+                ${rate.tierName}
+            </span>
+            <span class="text-amber-950 font-black text-sm">
+                +$${rate.fee.toLocaleString('es-CO')}
+            </span>
+        </div>
+        <p class="text-[11px] text-amber-900 leading-snug">
+            ${rate.reason}
+        </p>
+        <div class="mt-1.5 pt-1.5 border-t border-amber-200/80 flex items-center justify-between text-[10px] text-amber-800">
+            <span>🛡️ Tarifa mínima base: <strong>$14.000 COP</strong></span>
+            <span>${rate.isMinFee ? '✨ Aplicando tarifa mínima' : '⚡ Tarifa por inmediatez'}</span>
+        </div>
+    `;
+}
+
 // Inicialización
 document.addEventListener('DOMContentLoaded', () => {
     AppState.products = getStoredProducts();
@@ -172,12 +282,16 @@ function setupEventListeners() {
 
         expressDateInput.addEventListener('change', (e) => {
             AppState.customDeliveryDate = e.target.value;
+            updateExpressInfoBox();
+            updateCartSummary();
         });
     }
 
     if (expressSlotSelect) {
         expressSlotSelect.addEventListener('change', (e) => {
             AppState.customDeliverySlot = e.target.value;
+            updateExpressInfoBox();
+            updateCartSummary();
         });
     }
 
@@ -191,6 +305,9 @@ function setupEventListeners() {
             if (surchargeRow) {
                 surchargeRow.classList.toggle('hidden', !e.target.checked);
                 surchargeRow.classList.toggle('flex', e.target.checked);
+            }
+            if (e.target.checked) {
+                updateExpressInfoBox();
             }
             updateCartSummary();
         });
@@ -415,7 +532,17 @@ function renderCartItems() {
 function updateCartSummary() {
     const subtotal = AppState.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const baseShipping = AppState.cart.length > 0 ? (AppState.deliveryCosts[AppState.deliveryZone] || 0) : 0;
-    const expressFee = (AppState.isExpressDelivery && AppState.cart.length > 0) ? AppState.expressSurcharge : 0;
+    
+    // Tarifa express dinámica según urgencia / antelación
+    let expressFee = 0;
+    if (AppState.isExpressDelivery && AppState.cart.length > 0) {
+        const rate = calculateDynamicExpressFee(AppState.customDeliveryDate, AppState.customDeliverySlot);
+        expressFee = rate.fee;
+        AppState.expressFee = rate.fee;
+        AppState.expressTierName = rate.tierName;
+        AppState.expressReason = rate.reason;
+    }
+
     const total = subtotal + baseShipping + expressFee;
 
     const elSubtotal = document.getElementById('cart-subtotal');
@@ -425,7 +552,9 @@ function updateCartSummary() {
 
     if (elSubtotal) elSubtotal.textContent = `$${subtotal.toLocaleString('es-CO')}`;
     if (elShipping) elShipping.textContent = baseShipping === 0 ? 'Gratis (Guasca)' : `$${baseShipping.toLocaleString('es-CO')}`;
-    if (elExpressFee) elExpressFee.textContent = `+$${expressFee.toLocaleString('es-CO')}`;
+    if (elExpressFee) {
+        elExpressFee.textContent = `+$${expressFee.toLocaleString('es-CO')}`;
+    }
     if (elTotal) elTotal.textContent = `$${total.toLocaleString('es-CO')}`;
 
     // Actualizar banner inteligente de fecha según día y hora del pedido
@@ -578,10 +707,14 @@ function openCheckoutModal() {
 
     if (AppState.isExpressDelivery) {
         const chosenDate = AppState.customDeliveryDate || 'Mañana';
+        const rate = calculateDynamicExpressFee(AppState.customDeliveryDate, AppState.customDeliverySlot);
         if (dayInput) dayInput.value = `Express: ${chosenDate} (${AppState.customDeliverySlot})`;
         if (expressBox && expressText) {
             expressBox.classList.remove('hidden');
-            expressText.textContent = `Despacho prioritario directo a domicilio en fecha seleccionada: ${chosenDate} en la franja ${AppState.customDeliverySlot}. Recargo de transporte express incluido (+ $15.000).`;
+            expressText.innerHTML = `
+                Despacho prioritario directo a domicilio en fecha seleccionada: <strong>${chosenDate} (${AppState.customDeliverySlot})</strong>.<br>
+                Nivel: <strong>${rate.tierName}</strong>. Recargo por inmediatez: <strong>+$${rate.fee.toLocaleString('es-CO')} COP</strong> (Tarifa mínima base: $14.000).
+            `;
         }
     } else {
         const info = getCalculatedDeliveryInfo();
@@ -619,7 +752,7 @@ function handleCheckoutSubmit(e) {
 
     const subtotal = AppState.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const baseShipping = AppState.deliveryCosts[zone] || 0;
-    const expressFee = AppState.isExpressDelivery ? AppState.expressSurcharge : 0;
+    const expressFee = AppState.isExpressDelivery ? (AppState.expressFee || 14000) : 0;
     const totalShipping = baseShipping + expressFee;
     const total = subtotal + totalShipping;
 
@@ -636,6 +769,8 @@ function handleCheckoutSubmit(e) {
             zone, 
             deliveryDay, 
             isExpress: AppState.isExpressDelivery,
+            expressTier: AppState.isExpressDelivery ? AppState.expressTierName : null,
+            expressFee: expressFee,
             customSlot: AppState.isExpressDelivery ? AppState.customDeliverySlot : null,
             notes 
         },
@@ -657,7 +792,10 @@ function handleCheckoutSubmit(e) {
     waMessage += `• Teléfono: ${phone}\n`;
     waMessage += `• Dirección de Domicilio: ${address}\n`;
     waMessage += `• Destino/Zona: ${zone === 'personalizado-domicilio' ? 'DIRECTO A TU CASA (PERSONALIZADO)' : zone.toUpperCase()}\n`;
-    waMessage += `• Modalidad: ${AppState.isExpressDelivery ? '🚀 DESPACHO EXPRESS / FECHA PERSONALIZADA' : '🌿 RUTA COMUNITARIA ESTÁNDAR'}\n`;
+    waMessage += `• Modalidad: ${AppState.isExpressDelivery ? '🚀 DESPACHO EXPRESS DINÁMICO' : '🌿 RUTA COMUNITARIA ESTÁNDAR'}\n`;
+    if (AppState.isExpressDelivery) {
+        waMessage += `• Nivel de Urgencia: ${AppState.expressTierName}\n`;
+    }
     waMessage += `• Fecha de Entrega: ${deliveryDay}\n`;
     if (AppState.isExpressDelivery) {
         waMessage += `• Franja Horaria Solicitada: ${AppState.customDeliverySlot}\n`;
@@ -674,7 +812,8 @@ function handleCheckoutSubmit(e) {
     waMessage += `• Subtotal Cosecha: $${subtotal.toLocaleString('es-CO')}\n`;
     waMessage += `• Transporte Base: $${baseShipping.toLocaleString('es-CO')}\n`;
     if (AppState.isExpressDelivery) {
-        waMessage += `• Recargo Despacho Express: $${expressFee.toLocaleString('es-CO')}\n`;
+        waMessage += `• Recargo Despacho Express (${AppState.expressTierName}): $${expressFee.toLocaleString('es-CO')}\n`;
+        waMessage += `   _(Tarifa mínima base: $14.000 COP)_\n`;
     }
     waMessage += `• *TOTAL A PAGAR:* $${total.toLocaleString('es-CO')}\n\n`;
     waMessage += `🤝 *IMPACTO:* Este pedido evita intermediarios y apoya directamente a las familias campesinas de Guasca.\n`;
