@@ -134,8 +134,8 @@ const SEED_PRODUCTS = [
         unit: "Bolsa 500g",
         stockKg: 50,
         harvestDate: "Cosecha inmediata",
-        image: "https://images.unsplash.com/photo-1550258987-190a2d41a8ba?w=600&auto=format&fit=crop&q=80",
-        description: "Uchuva andina jugosa y ácida, conservada en su capacho natural protector para máxima frescura en el viaje a la ciudad.",
+        image: "assets/images/uchuva_silvestre.jpg",
+        description: "Uchuva andina jugosa y dulce, cosechada con su capacho natural protector para máxima frescura en el viaje a la ciudad.",
         badge: "Superalimento",
         demandAnticipation: true,
         fairTradeMargin: "80% directo al productor",
@@ -188,7 +188,7 @@ const SEED_PRODUCTS = [
         unit: "Frasco de vidrio 250g",
         stockKg: 45,
         harvestDate: "Lote de la semana",
-        image: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=600&auto=format&fit=crop&q=80",
+        image: "assets/images/arequipe_campesino.jpg",
         description: "Lenta cocción de 6 horas con leña seleccionada y leche entera pura. Color dorado oscuro y sabor inigualable.",
         badge: "Receta Ancestral",
         demandAnticipation: false,
@@ -278,7 +278,7 @@ const SEED_PRODUCTS = [
         unit: "Frasco de vidrio 500g",
         stockKg: 30,
         harvestDate: "Extracción artesanal en frío",
-        image: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=600&auto=format&fit=crop&q=80",
+        image: "assets/images/miel_pura.jpg",
         description: "Miel cruda sin pasteurizar con floración de frailejón, eucalipto y mora silvestre. Apicultura sostenible para la polinización de los cultivos de San Francisco.",
         badge: "Pura y Cruda",
         demandAnticipation: false,
@@ -350,7 +350,7 @@ const SEED_PRODUCTS = [
         unit: "Frasco de vidrio 250g",
         stockKg: 35,
         harvestDate: "Lote artesanal",
-        image: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=600&auto=format&fit=crop&q=80",
+        image: "assets/images/mermelada_uchuva.jpg",
         description: "Elaborada por madres campesinas con uchuva seleccionada de Guasca y panela ecológica. Sin colorantes ni pectinas artificiales.",
         badge: "Mujeres Rurales",
         demandAnticipation: false,
@@ -432,9 +432,16 @@ function getStoredProducts() {
         let products = JSON.parse(stored);
         let updated = false;
         SEED_PRODUCTS.forEach(seed => {
-            if (!products.some(p => p.id === seed.id)) {
+            const existing = products.find(p => p.id === seed.id);
+            if (!existing) {
                 products.push(seed);
                 updated = true;
+            } else {
+                // Sincronizar imagen y datos si fueron corregidos en semilla
+                if (existing.image !== seed.image) {
+                    existing.image = seed.image;
+                    updated = true;
+                }
             }
         });
         if (updated) {

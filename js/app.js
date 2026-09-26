@@ -58,6 +58,13 @@ function loadCart() {
     if (saved) {
         try {
             AppState.cart = JSON.parse(saved);
+            // Sincronizar imagen actualizada si el producto cambió de foto
+            AppState.cart.forEach(item => {
+                const prod = AppState.products.find(p => p.id === item.productId);
+                if (prod && prod.image) {
+                    item.image = prod.image;
+                }
+            });
         } catch (e) {
             AppState.cart = [];
         }
