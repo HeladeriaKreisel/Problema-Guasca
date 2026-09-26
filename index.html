@@ -385,99 +385,102 @@
     <!-- DRAWER DEL CARRITO DE COMPRAS -->
     <div id="cart-backdrop" class="drawer-backdrop" onclick="toggleCartDrawer(false)"></div>
     <div id="cart-drawer" class="drawer-panel">
-        <div class="p-5 border-b border-gray-100 flex items-center justify-between bg-emerald-900 text-white">
+        <div class="p-5 border-b border-gray-100 flex items-center justify-between bg-emerald-900 text-white shrink-0">
             <div class="flex items-center gap-2">
                 <span class="text-xl">🧺</span>
                 <h3 class="font-bold text-lg text-white">Canasta Comunitaria</h3>
             </div>
-            <button onclick="toggleCartDrawer(false)" class="text-emerald-200 hover:text-white font-bold text-xl p-1">
+            <button onclick="toggleCartDrawer(false)" class="text-emerald-200 hover:text-white font-bold text-xl p-1" title="Cerrar carrito">
                 ✕
             </button>
         </div>
 
-        <!-- Lista de ítems -->
-        <div id="cart-items-container" class="flex-1 overflow-y-auto p-4">
-            <!-- Inyectado por app.js -->
+        <!-- CUERPO DESPLAZABLE DEL CARRITO (Ítems y Opciones de Entrega) -->
+        <div class="flex-1 overflow-y-auto min-h-0 divide-y divide-gray-100 overscroll-contain">
+            <!-- Lista de ítems -->
+            <div id="cart-items-container" class="p-4">
+                <!-- Inyectado por app.js -->
+            </div>
+
+            <!-- Opciones de Logística de Entrega -->
+            <div class="p-4 bg-gray-50 text-xs space-y-3">
+                <div>
+                    <label class="block font-semibold text-gray-700 mb-1">Destino de Entrega / Modalidad:</label>
+                    <select id="cart-delivery-zone" class="w-full bg-white border border-gray-200 rounded-lg p-2 text-xs focus:ring-1 focus:ring-emerald-700 font-medium">
+                        <optgroup label="🏢 Puntos Comunitarios de Recogida (Se avisa al llegar)">
+                            <option value="punto-comunitario-bogota-norte">🏢 Punto Comunitario Bogotá Norte (Usaquén - Cra 7 con Cll 120) - $4.000</option>
+                            <option value="punto-comunitario-bogota-centro">🏢 Punto Comunitario Bogotá Centro (Parkway / Teusaquillo) - $4.000</option>
+                            <option value="guasca-recogida">🏡 Punto Comunitario San Francisco (Guasca - JAC) - Gratis</option>
+                        </optgroup>
+                        <optgroup label="📍 Domicilio Directo Puerta a Puerta (A tu Casa)">
+                            <option value="personalizado-domicilio" selected>📍 Domicilio Personalizado Puerta a Puerta (A tu Casa en Bogotá/Sabana) - $12.000</option>
+                            <option value="bogota-norte">🚛 Domicilio Bogotá Norte (Suba, Usaquén, Rosales) - $8.000</option>
+                            <option value="bogota-centro">🚛 Domicilio Bogotá Centro / Chapinero - $9.000</option>
+                            <option value="sabana-centro">🚛 Domicilio Sabana Centro (Sopó, Chía, Cajicá) - $6.000</option>
+                        </optgroup>
+                    </select>
+                    <p id="zone-description-note" class="text-gray-500 mt-1 italic text-[11px]">
+                        📦 Despacho directo a tu puerta en cualquier dirección de Bogotá o Sabana Centro.
+                    </p>
+                </div>
+
+                <!-- Aviso Exclusivo para Punto Comunitario -->
+                <div id="cart-community-notice" class="hidden p-3 bg-blue-50 rounded-xl border border-blue-200 text-blue-950 text-xs">
+                    <div class="flex items-start gap-2">
+                        <span class="text-base">📢</span>
+                        <div>
+                            <strong class="block text-blue-900 font-bold mb-0.5">Aviso de Punto Comunitario:</strong>
+                            <p class="text-[11px] text-blue-800 leading-snug">
+                                Se te avisará al WhatsApp en cuanto tu pedido se encuentre en el puesto comunitario para que pases a reclamarlo. No tienes que ingresar tu dirección personal.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Banner Inteligente de Fecha según Día y Hora de corte -->
+                <div id="dynamic-schedule-banner" class="p-3 bg-emerald-50/90 rounded-xl border border-emerald-200 text-xs">
+                    <!-- Se actualiza dinámicamente según día y hora en app.js -->
+                </div>
+
+                <!-- Opción Express Dinámica según urgencia y antelación -->
+                <div class="p-3 bg-amber-50 rounded-xl border border-amber-200">
+                    <div class="flex items-start gap-2">
+                        <input type="checkbox" id="express-delivery-check" class="mt-0.5 w-4 h-4 text-amber-600 rounded cursor-pointer">
+                        <div class="flex-1">
+                            <label for="express-delivery-check" class="font-bold text-amber-950 block cursor-pointer">
+                                ⚡ ¿Lo quieres antes? Despacho Express con Tarifa Dinámica
+                            </label>
+                            <p class="text-[11px] text-amber-800 mt-0.5">
+                                El precio varía según qué tan rápido lo necesites (ej. mañana a primera hora es más costoso por cosecha de madrugada; con más días de antelación baja hasta la <strong>tarifa mínima de $14.000</strong>).
+                            </p>
+                        </div>
+                    </div>
+
+                    <div id="express-date-picker-box" class="hidden mt-2.5 pt-2 border-t border-amber-200 space-y-2">
+                        <div>
+                            <label class="block text-[11px] font-bold text-amber-950 mb-1">Fecha en que deseas recibirlo:</label>
+                            <input type="date" id="express-date-input" class="w-full bg-white border border-amber-300 rounded-lg p-2 text-xs text-gray-800">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-amber-950 mb-1">Franja horaria preferida:</label>
+                            <select id="express-time-slot" class="w-full bg-white border border-amber-300 rounded-lg p-2 text-xs text-gray-800">
+                                <option value="Urgente / Primera hora (7:00 AM - 9:00 AM)">Urgente / Primera hora (7:00 AM - 9:00 AM)</option>
+                                <option value="Mañana (8:00 AM - 12:00 PM)">Mañana (8:00 AM - 12:00 PM)</option>
+                                <option value="Tarde (1:00 PM - 5:00 PM)">Tarde (1:00 PM - 5:00 PM)</option>
+                            </select>
+                        </div>
+
+                        <!-- Indicador dinámico en vivo de la tarifa calculada -->
+                        <div id="express-fee-info-box" class="p-2.5 bg-amber-100/80 rounded-xl border border-amber-300 text-xs mt-2">
+                            <!-- Inyectado dinámicamente por app.js -->
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Opciones de Logística de Entrega -->
-        <div class="p-4 bg-gray-50 border-t border-gray-100 text-xs space-y-3">
-            <div>
-                <label class="block font-semibold text-gray-700 mb-1">Destino de Entrega / Modalidad:</label>
-                <select id="cart-delivery-zone" class="w-full bg-white border border-gray-200 rounded-lg p-2 text-xs focus:ring-1 focus:ring-emerald-700 font-medium">
-                    <optgroup label="🏢 Puntos Comunitarios de Recogida (Se avisa al llegar)">
-                        <option value="punto-comunitario-bogota-norte">🏢 Punto Comunitario Bogotá Norte (Usaquén - Cra 7 con Cll 120) - $4.000</option>
-                        <option value="punto-comunitario-bogota-centro">🏢 Punto Comunitario Bogotá Centro (Parkway / Teusaquillo) - $4.000</option>
-                        <option value="guasca-recogida">🏡 Punto Comunitario San Francisco (Guasca - JAC) - Gratis</option>
-                    </optgroup>
-                    <optgroup label="📍 Domicilio Directo Puerta a Puerta (A tu Casa)">
-                        <option value="personalizado-domicilio" selected>📍 Domicilio Personalizado Puerta a Puerta (A tu Casa en Bogotá/Sabana) - $12.000</option>
-                        <option value="bogota-norte">🚛 Domicilio Bogotá Norte (Suba, Usaquén, Rosales) - $8.000</option>
-                        <option value="bogota-centro">🚛 Domicilio Bogotá Centro / Chapinero - $9.000</option>
-                        <option value="sabana-centro">🚛 Domicilio Sabana Centro (Sopó, Chía, Cajicá) - $6.000</option>
-                    </optgroup>
-                </select>
-                <p id="zone-description-note" class="text-gray-500 mt-1 italic text-[11px]">
-                    📦 Despacho directo a tu puerta en cualquier dirección de Bogotá o Sabana Centro.
-                </p>
-            </div>
-
-            <!-- Aviso Exclusivo para Punto Comunitario -->
-            <div id="cart-community-notice" class="hidden p-3 bg-blue-50 rounded-xl border border-blue-200 text-blue-950 text-xs">
-                <div class="flex items-start gap-2">
-                    <span class="text-base">📢</span>
-                    <div>
-                        <strong class="block text-blue-900 font-bold mb-0.5">Aviso de Punto Comunitario:</strong>
-                        <p class="text-[11px] text-blue-800 leading-snug">
-                            Se te avisará al WhatsApp en cuanto tu pedido se encuentre en el puesto comunitario para que pases a reclamarlo. No tienes que ingresar tu dirección personal.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Banner Inteligente de Fecha según Día y Hora de corte -->
-            <div id="dynamic-schedule-banner" class="p-3 bg-emerald-50/90 rounded-xl border border-emerald-200 text-xs">
-                <!-- Se actualiza dinámicamente según día y hora en app.js -->
-            </div>
-
-            <!-- Opción Express Dinámica según urgencia y antelación -->
-            <div class="p-3 bg-amber-50 rounded-xl border border-amber-200">
-                <div class="flex items-start gap-2">
-                    <input type="checkbox" id="express-delivery-check" class="mt-0.5 w-4 h-4 text-amber-600 rounded cursor-pointer">
-                    <div class="flex-1">
-                        <label for="express-delivery-check" class="font-bold text-amber-950 block cursor-pointer">
-                            ⚡ ¿Lo quieres antes? Despacho Express con Tarifa Dinámica
-                        </label>
-                        <p class="text-[11px] text-amber-800 mt-0.5">
-                            El precio varía según qué tan rápido lo necesites (ej. mañana a primera hora es más costoso por cosecha de madrugada; con más días de antelación baja hasta la <strong>tarifa mínima de $14.000</strong>).
-                        </p>
-                    </div>
-                </div>
-
-                <div id="express-date-picker-box" class="hidden mt-2.5 pt-2 border-t border-amber-200 space-y-2">
-                    <div>
-                        <label class="block text-[11px] font-bold text-amber-950 mb-1">Fecha en que deseas recibirlo:</label>
-                        <input type="date" id="express-date-input" class="w-full bg-white border border-amber-300 rounded-lg p-2 text-xs text-gray-800">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-bold text-amber-950 mb-1">Franja horaria preferida:</label>
-                        <select id="express-time-slot" class="w-full bg-white border border-amber-300 rounded-lg p-2 text-xs text-gray-800">
-                            <option value="Urgente / Primera hora (7:00 AM - 9:00 AM)">Urgente / Primera hora (7:00 AM - 9:00 AM)</option>
-                            <option value="Mañana (8:00 AM - 12:00 PM)">Mañana (8:00 AM - 12:00 PM)</option>
-                            <option value="Tarde (1:00 PM - 5:00 PM)">Tarde (1:00 PM - 5:00 PM)</option>
-                        </select>
-                    </div>
-
-                    <!-- Indicador dinámico en vivo de la tarifa calculada -->
-                    <div id="express-fee-info-box" class="p-2.5 bg-amber-100/80 rounded-xl border border-amber-300 text-xs mt-2">
-                        <!-- Inyectado dinámicamente por app.js -->
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Resumen de Costos -->
-        <div class="p-5 border-t border-gray-200 bg-white">
+        <!-- Resumen de Costos y Botón de Pedido (SIEMPRE VISIBLE Y FIJO AL FONDO) -->
+        <div class="p-4 sm:p-5 border-t border-gray-200 bg-white shrink-0 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] z-10">
             <div class="space-y-1.5 text-xs text-gray-600 mb-3">
                 <div class="flex justify-between">
                     <span>Subtotal Cosecha:</span>
