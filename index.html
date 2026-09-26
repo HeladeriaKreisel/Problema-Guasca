@@ -403,17 +403,36 @@
         <!-- Opciones de Logística de Entrega -->
         <div class="p-4 bg-gray-50 border-t border-gray-100 text-xs space-y-3">
             <div>
-                <label class="block font-semibold text-gray-700 mb-1">Destino de Entrega:</label>
-                <select id="cart-delivery-zone" class="w-full bg-white border border-gray-200 rounded-lg p-2 text-xs focus:ring-1 focus:ring-emerald-700">
-                    <option value="personalizado-domicilio">📍 Envío Personalizado Puerta a Puerta (A tu Casa) - $12.000</option>
-                    <option value="bogota-norte">Bogotá Norte (Usaquén, Suba, Rosales) - $8.000</option>
-                    <option value="bogota-centro">Bogotá Centro / Chapinero / Teusaquillo - $9.000</option>
-                    <option value="sabana-centro">Sabana Centro (Sopó, Chía, Cajicá) - $6.000</option>
-                    <option value="guasca-recogida">Punto Comunitario San Francisco (Guasca) - Gratis</option>
+                <label class="block font-semibold text-gray-700 mb-1">Destino de Entrega / Modalidad:</label>
+                <select id="cart-delivery-zone" class="w-full bg-white border border-gray-200 rounded-lg p-2 text-xs focus:ring-1 focus:ring-emerald-700 font-medium">
+                    <optgroup label="🏢 Puntos Comunitarios de Recogida (Se avisa al llegar)">
+                        <option value="punto-comunitario-bogota-norte">🏢 Punto Comunitario Bogotá Norte (Usaquén - Cra 7 con Cll 120) - $4.000</option>
+                        <option value="punto-comunitario-bogota-centro">🏢 Punto Comunitario Bogotá Centro (Parkway / Teusaquillo) - $4.000</option>
+                        <option value="guasca-recogida">🏡 Punto Comunitario San Francisco (Guasca - JAC) - Gratis</option>
+                    </optgroup>
+                    <optgroup label="📍 Domicilio Directo Puerta a Puerta (A tu Casa)">
+                        <option value="personalizado-domicilio" selected>📍 Domicilio Personalizado Puerta a Puerta (A tu Casa en Bogotá/Sabana) - $12.000</option>
+                        <option value="bogota-norte">🚛 Domicilio Bogotá Norte (Suba, Usaquén, Rosales) - $8.000</option>
+                        <option value="bogota-centro">🚛 Domicilio Bogotá Centro / Chapinero - $9.000</option>
+                        <option value="sabana-centro">🚛 Domicilio Sabana Centro (Sopó, Chía, Cajicá) - $6.000</option>
+                    </optgroup>
                 </select>
                 <p id="zone-description-note" class="text-gray-500 mt-1 italic text-[11px]">
                     📦 Despacho directo a tu puerta en cualquier dirección de Bogotá o Sabana Centro.
                 </p>
+            </div>
+
+            <!-- Aviso Exclusivo para Punto Comunitario -->
+            <div id="cart-community-notice" class="hidden p-3 bg-blue-50 rounded-xl border border-blue-200 text-blue-950 text-xs">
+                <div class="flex items-start gap-2">
+                    <span class="text-base">📢</span>
+                    <div>
+                        <strong class="block text-blue-900 font-bold mb-0.5">Aviso de Punto Comunitario:</strong>
+                        <p class="text-[11px] text-blue-800 leading-snug">
+                            Se te avisará al WhatsApp en cuanto tu pedido se encuentre en el puesto comunitario para que pases a reclamarlo. No tienes que ingresar tu dirección personal.
+                        </p>
+                    </div>
+                </div>
             </div>
 
             <!-- Banner Inteligente de Fecha según Día y Hora de corte -->
@@ -518,21 +537,22 @@
                            class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2.5 text-xs focus:bg-white focus:ring-1 focus:ring-emerald-700">
                 </div>
 
-                <div>
-                    <label class="block font-semibold text-gray-700 mb-1">Dirección Exacta de Tu Casa / Apartamento *</label>
-                    <input type="text" id="client-address" required placeholder="Ej: Calle 127 # 15-40, Apto 302, Barrio Santa Bárbara" 
-                           class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2.5 text-xs focus:bg-white focus:ring-1 focus:ring-emerald-700">
-                </div>
-
+                <!-- Selector de Destino de Entrega -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <div>
                         <label class="block font-semibold text-gray-700 mb-1">Destino de Entrega</label>
-                        <select id="client-zone" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2 text-xs">
-                            <option value="personalizado-domicilio">📍 Directo a tu Domicilio (A tu casa)</option>
-                            <option value="bogota-norte">Bogotá Norte</option>
-                            <option value="bogota-centro">Bogotá Chapinero / Centro</option>
-                            <option value="sabana-centro">Sabana Centro (Sopó, Chía, Cajicá)</option>
-                            <option value="guasca-recogida">Guasca (Punto JAC)</option>
+                        <select id="client-zone" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2 text-xs font-medium">
+                            <optgroup label="🏢 Puntos Comunitarios (Se avisa al llegar)">
+                                <option value="punto-comunitario-bogota-norte">🏢 Punto Comunitario Bogotá Norte (Usaquén)</option>
+                                <option value="punto-comunitario-bogota-centro">🏢 Punto Comunitario Bogotá Centro (Parkway)</option>
+                                <option value="guasca-recogida">🏡 Punto Comunitario San Francisco (Guasca - JAC)</option>
+                            </optgroup>
+                            <optgroup label="📍 Domicilio Puerta a Puerta (A tu Casa)">
+                                <option value="personalizado-domicilio" selected>📍 Domicilio Personalizado (A tu Casa)</option>
+                                <option value="bogota-norte">🚛 Domicilio Bogotá Norte</option>
+                                <option value="bogota-centro">🚛 Domicilio Bogotá Centro / Chapinero</option>
+                                <option value="sabana-centro">🚛 Domicilio Sabana Centro</option>
+                            </optgroup>
                         </select>
                     </div>
                     <div>
@@ -540,6 +560,28 @@
                         <input type="text" id="client-day" readonly 
                                class="w-full bg-emerald-50 border border-emerald-200 rounded-lg p-2 text-xs text-emerald-950 font-bold">
                     </div>
+                </div>
+
+                <!-- Aviso destacado cuando se elige Punto Comunitario -->
+                <div id="checkout-community-notice" class="hidden p-3 bg-blue-50 rounded-xl border border-blue-200 text-blue-950 text-xs">
+                    <div class="flex items-start gap-2">
+                        <span class="text-base">📢</span>
+                        <div>
+                            <strong class="block text-blue-900 font-bold mb-0.5">Punto Comunitario Seleccionado:</strong>
+                            <p class="text-[11px] text-blue-800 leading-snug">
+                                <strong>Se te avisará al WhatsApp cuando tu pedido se encuentre disponible en el puesto comunitario</strong> para que pases a reclamarlo. La dirección personal queda bloqueada ya que se entrega en este acopio.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Campo de Dirección (Editable para domicilio, Bloqueado para punto comunitario) -->
+                <div id="address-container">
+                    <label id="client-address-label" class="block font-semibold text-gray-700 mb-1">
+                        Dirección Exacta de Tu Casa / Apartamento *
+                    </label>
+                    <input type="text" id="client-address" required placeholder="Ej: Calle 127 # 15-40, Apto 302, Barrio Santa Bárbara" 
+                           class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2.5 text-xs focus:bg-white focus:ring-1 focus:ring-emerald-700 transition-all">
                 </div>
 
                 <div id="checkout-express-details" class="hidden p-2.5 bg-amber-50 rounded-xl border border-amber-200 text-amber-950 text-[11px]">

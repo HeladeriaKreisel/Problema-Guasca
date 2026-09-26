@@ -140,8 +140,14 @@ function renderIncomingOrders() {
                 <div>
                     <strong class="text-gray-900 block font-semibold">${order.client.name}</strong>
                     <p class="text-xs text-gray-600 mt-0.5">📞 Tel: ${order.client.phone}</p>
-                    <p class="text-xs text-gray-600">📍 Entrega: ${order.client.address} (${order.client.zone})</p>
+                    <p class="text-xs text-gray-600">📍 Entrega: ${order.client.address}</p>
                     <p class="text-xs text-emerald-700 font-semibold mt-1">🗓️ Fecha de entrega: ${order.client.deliveryDay}</p>
+                    ${order.client.isCommunityPickup ? `
+                        <div class="mt-1.5 p-2 bg-blue-50 rounded-lg border border-blue-200 text-[11px] text-blue-950 font-semibold">
+                            🏢 Recogida en Puesto Comunitario: <strong>${order.client.pickupName || 'Puesto Acopio'}</strong>
+                            <span class="block text-blue-800 text-[10px] mt-0.5 font-normal">📢 Recordatorio: Avisar al cliente por WhatsApp cuando su pedido llegue aquí.</span>
+                        </div>
+                    ` : ''}
                     ${order.client.isExpress ? `
                         <div class="mt-1.5 p-2 bg-amber-50 rounded-lg border border-amber-300 text-[11px] text-amber-950 font-bold">
                             ⚡ ${order.client.expressTier || 'Despacho Express'} (+ $${(order.client.expressFee || 14000).toLocaleString('es-CO')})

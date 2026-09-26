@@ -23,9 +23,34 @@ const AppState = {
         'bogota-norte': 8000,
         'bogota-centro': 9000,
         'sabana-centro': 6000,
+        'punto-comunitario-bogota-norte': 4000,
+        'punto-comunitario-bogota-centro': 4000,
         'guasca-recogida': 0
     }
 };
+
+// Configuración de Puestos Comunitarios de Acopio y Recogida
+const COMMUNITY_PICKUP_POINTS = {
+    'punto-comunitario-bogota-norte': {
+        name: 'Punto Comunitario Bogotá Norte',
+        address: 'Puesto Comunitario Usaquén (Carrera 7 # 120-20, Bogotá)',
+        notice: 'Se te avisará al WhatsApp en cuanto tu pedido se encuentre en el puesto comunitario de Bogotá Norte para que pases a reclamarlo.'
+    },
+    'punto-comunitario-bogota-centro': {
+        name: 'Punto Comunitario Bogotá Centro',
+        address: 'Puesto Comunitario Parkway Teusaquillo (Carrera 24 # 39B-15, Bogotá)',
+        notice: 'Se te avisará al WhatsApp en cuanto tu pedido se encuentre en el puesto comunitario de Bogotá Centro para que pases a reclamarlo.'
+    },
+    'guasca-recogida': {
+        name: 'Punto Comunitario San Francisco (Guasca)',
+        address: 'Centro de Acopio JAC, Vereda La Trinidad, Sector San Francisco (Guasca)',
+        notice: 'Se te avisará al WhatsApp en cuanto tu pedido se encuentre listo en el puesto comunitario de la vereda.'
+    }
+};
+
+function isCommunityPoint(zone) {
+    return !!COMMUNITY_PICKUP_POINTS[zone];
+}
 
 // Cargar carrito desde localStorage
 function loadCart() {
@@ -261,8 +286,16 @@ function setupEventListeners() {
     if (zoneSelect) {
         zoneSelect.value = AppState.deliveryZone;
         zoneSelect.addEventListener('change', (e) => {
-            AppState.deliveryZone = e.target.value;
-            updateZoneDescriptionNote(e.target.value);
+            applyZoneToUI(e.target.value);
+            updateCartSummary();
+        });
+    }
+
+    // Selector de zona en modal de checkout
+    const clientZoneSelect = document.getElementById('client-zone');
+    if (clientZoneSelect) {
+        clientZoneSelect.addEventListener('change', (e) => {
+            applyZoneToUI(e.target.value);
             updateCartSummary();
         });
     }
@@ -320,19 +353,77 @@ function setupEventListeners() {
     }
 }
 
-function updateZoneDescriptionNote(zone) {
-    const note = document.getElementById('zone-description-note');
-    if (!note) return;
-    if (zone === 'personalizado-domicilio') {
-        note.textContent = '📍 Despacho personalizado directo a la puerta de tu casa en Bogotá o municipios aledaños.';
-    } else if (zone === 'bogota-norte') {
-        note.textContent = '🚛 Ruta Norte: Usaquén, Suba, Rosales, Santa Bárbara, Cedritos.';
-    } else if (zone === 'bogota-centro') {
-        note.textContent = '🚛 Ruta Centro: Chapinero, Teusaquillo, Parkway, Galerías.';
-    } else if (zone === 'sabana-centro') {
-        note.textContent = '🚛 Ruta Sabana: Sopó, Chía, Cajicá, Zipaquirá.';
+// Aplicar lógica de Punto Comunitario (Bloqueo de dirección y aviso de llegada)
+function applyZoneToUI(zone) {
+    AppState.deliveryZone = zone;
+
+    // Sincronizar selectores si existen
+    const cartSelect = document.getElementById('cart-delivery-zone');
+    const clientSelect = document.getElementById('client-zone');
+    if (cartSelect && cartSelect.value !== zone) cartSelect.value = zone;
+    if (clientSelect && clientSelect.value !== zone) clientSelect.value = zone;
+
+    const cartNotice = document.getElementById('cart-community-notice');
+    const checkoutNotice = document.getElementById('checkout-community-notice');
+    const addressInput = document.getElementById('client-address');
+    const addressLabel = document.getElementById('client-address-label');
+    const zoneNote = document.getElementById('zone-description-note');
+
+    if (isCommunityPoint(zone)) {
+        const point = COMMUNITY_PICKUP_POINTS[zone];
+
+        // Mostrar aviso destacado
+        if (cartNotice) cartNotice.classList.remove('hidden');
+        if (checkoutNotice) checkoutNotice.classList.remove('hidden');
+
+        // Bloquear campo de dirección para que el usuario NO pueda poner su dirección personal
+        if (addressInput) {
+            addressInput.value = point.address;
+            addressInput.readOnly = true;
+            addressInput.classList.add('bg-blue-50', 'text-blue-950', 'font-semibold', 'cursor-not-allowed', 'border-blue-400');
+            addressInput.classList.remove('bg-gray-50', 'bg-white');
+        }
+
+        if (addressLabel) {
+            addressLabel.innerHTML = `🏢 Ubicación del Puesto Comunitario <span class="text-blue-700 font-bold">(Bloqueado - No requieres ingresar dirección)</span>:`;
+        }
+
+        if (zoneNote) {
+            zoneNote.textContent = `🏢 ${point.notice}`;
+        }
     } else {
-        note.textContent = '🏡 Punto comunitario: Recogida en el centro de acopio de San Francisco (Guasca).';
+        // Es entrega a domicilio (personalizado o por ruta)
+        if (cartNotice) cartNotice.classList.add('hidden');
+        if (checkoutNotice) checkoutNotice.classList.add('hidden');
+
+        // Habilitar campo de dirección
+        if (addressInput) {
+            // Si tenía la dirección de un punto comunitario anterior, limpiarlo para que ingrese la suya
+            const isPointAddress = Object.values(COMMUNITY_PICKUP_POINTS).some(p => p.address === addressInput.value);
+            if (isPointAddress) {
+                addressInput.value = '';
+            }
+            addressInput.readOnly = false;
+            addressInput.classList.remove('bg-blue-50', 'text-blue-950', 'font-semibold', 'cursor-not-allowed', 'border-blue-400');
+            addressInput.classList.add('bg-gray-50');
+            addressInput.placeholder = 'Ej: Calle 127 # 15-40, Apto 302, Barrio Santa Bárbara';
+        }
+
+        if (addressLabel) {
+            addressLabel.innerHTML = `Dirección Exacta de Tu Casa / Apartamento *`;
+        }
+
+        if (zoneNote) {
+            if (zone === 'personalizado-domicilio') {
+                zoneNote.textContent = '📍 Despacho personalizado directo a la puerta de tu casa en Bogotá o municipios aledaños.';
+            } else if (zone === 'bogota-norte') {
+                zoneNote.textContent = '🚛 Domicilio Ruta Norte: Usaquén, Suba, Rosales, Santa Bárbara, Cedritos.';
+            } else if (zone === 'bogota-centro') {
+                zoneNote.textContent = '🚛 Domicilio Ruta Centro: Chapinero, Teusaquillo, Parkway, Galerías.';
+            } else if (zone === 'sabana-centro') {
+                zoneNote.textContent = '🚛 Domicilio Ruta Sabana: Sopó, Chía, Cajicá, Zipaquirá.';
+            }
+        }
     }
 }
 
@@ -695,11 +786,8 @@ function openCheckoutModal() {
     const modal = document.getElementById('checkout-modal');
     if (!modal) return;
 
-    // Sincronizar zona elegida en carrito
-    const clientZone = document.getElementById('client-zone');
-    if (clientZone) {
-        clientZone.value = AppState.deliveryZone;
-    }
+    // Sincronizar zona y bloquear dirección si es punto comunitario
+    applyZoneToUI(AppState.deliveryZone);
 
     const dayInput = document.getElementById('client-day');
     const expressBox = document.getElementById('checkout-express-details');
@@ -712,7 +800,7 @@ function openCheckoutModal() {
         if (expressBox && expressText) {
             expressBox.classList.remove('hidden');
             expressText.innerHTML = `
-                Despacho prioritario directo a domicilio en fecha seleccionada: <strong>${chosenDate} (${AppState.customDeliverySlot})</strong>.<br>
+                Despacho prioritario directo en fecha seleccionada: <strong>${chosenDate} (${AppState.customDeliverySlot})</strong>.<br>
                 Nivel: <strong>${rate.tierName}</strong>. Recargo por inmediatez: <strong>+$${rate.fee.toLocaleString('es-CO')} COP</strong> (Tarifa mínima base: $14.000).
             `;
         }
@@ -757,6 +845,8 @@ function handleCheckoutSubmit(e) {
     const total = subtotal + totalShipping;
 
     const orderId = 'AG-' + Math.floor(1000 + Math.random() * 9000);
+    const isPickup = isCommunityPoint(zone);
+    const pickupPoint = isPickup ? COMMUNITY_PICKUP_POINTS[zone] : null;
 
     // Crear orden para el registro
     const newOrder = {
@@ -765,8 +855,10 @@ function handleCheckoutSubmit(e) {
         client: { 
             name, 
             phone, 
-            address, 
+            address: isPickup ? pickupPoint.address : address, 
             zone, 
+            isCommunityPickup: isPickup,
+            pickupName: isPickup ? pickupPoint.name : null,
             deliveryDay, 
             isExpress: AppState.isExpressDelivery,
             expressTier: AppState.isExpressDelivery ? AppState.expressTierName : null,
@@ -790,17 +882,27 @@ function handleCheckoutSubmit(e) {
     waMessage += `👤 *DATOS DEL COMPRADOR:*\n`;
     waMessage += `• Nombre: ${name}\n`;
     waMessage += `• Teléfono: ${phone}\n`;
-    waMessage += `• Dirección de Domicilio: ${address}\n`;
-    waMessage += `• Destino/Zona: ${zone === 'personalizado-domicilio' ? 'DIRECTO A TU CASA (PERSONALIZADO)' : zone.toUpperCase()}\n`;
-    waMessage += `• Modalidad: ${AppState.isExpressDelivery ? '🚀 DESPACHO EXPRESS DINÁMICO' : '🌿 RUTA COMUNITARIA ESTÁNDAR'}\n`;
-    if (AppState.isExpressDelivery) {
-        waMessage += `• Nivel de Urgencia: ${AppState.expressTierName}\n`;
+
+    if (isPickup) {
+        waMessage += `• Modalidad: 🏢 PUESTO COMUNITARIO DE RECOGIDA\n`;
+        waMessage += `• Puesto Asignado: ${pickupPoint.name}\n`;
+        waMessage += `• Dirección de Acopio: ${pickupPoint.address}\n`;
+        waMessage += `• 📢 AVISO DE LLEGADA: Se le avisará al comprador por WhatsApp en cuanto el pedido se encuentre en el puesto comunitario.\n`;
+    } else {
+        waMessage += `• Modalidad: 📍 DOMICILIO PUERTA A PUERTA (A TU CASA)\n`;
+        waMessage += `• Dirección de Entrega: ${address}\n`;
+        waMessage += `• Zona: ${zone === 'personalizado-domicilio' ? 'DIRECTO A TU CASA (PERSONALIZADO)' : zone.toUpperCase()}\n`;
     }
-    waMessage += `• Fecha de Entrega: ${deliveryDay}\n`;
+
     if (AppState.isExpressDelivery) {
-        waMessage += `• Franja Horaria Solicitada: ${AppState.customDeliverySlot}\n`;
+        waMessage += `• Prioridad: 🚀 DESPACHO EXPRESS (${AppState.expressTierName})\n`;
+        waMessage += `• Fecha Solicitada: ${deliveryDay}\n`;
+        waMessage += `• Franja Horaria: ${AppState.customDeliverySlot}\n`;
+    } else {
+        waMessage += `• Fecha Programada: ${deliveryDay}\n`;
     }
-    if (notes) waMessage += `• Observaciones/Timbre: ${notes}\n`;
+
+    if (notes) waMessage += `• Observaciones/Comentarios: ${notes}\n`;
     waMessage += `\n🧺 *CANASTA DE PRODUCTOS CONSOLIDADOS:*\n`;
 
     AppState.cart.forEach((item, index) => {
